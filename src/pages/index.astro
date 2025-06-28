@@ -1,0 +1,68 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div style="display: flex;">
+				<div>
+					<h1>🧑‍🚀 Hi,I am Ankit!</h1>
+					<p>
+						I'm a software engineer driven by curiosity and obsessed with how things work under the hood.
+						who has builder's mindset and a deep love for clean, scalable systems. I've spend last
+						few year working on backend systems and some time on
+						fronted designing robust ui.
+					</p>
+					<p>
+						Over the past few years, I’ve spent my time designing
+						both microservices-based architectures and robust
+						monolithic systems — mostly for financial domains where
+						performance, consistency, and reliability matter most.
+						<code>astro.config.mjs</code><a
+							href="https://astro.build/integrations"></a>
+					</p>
+					<p>
+						What excites me is solving real-world problems with
+						elegant engineering — whether it’s optimizing
+						inter-service communication, fine-tuning a PostgreSQL
+						query, or containerizing systems for smoother
+						deployment. I enjoy thinking in systems, not just
+						services.
+					</p>
+					Beyond just code, I love sharing what I learn — be it through
+					writing, mentoring, or open discussion. I believe great software
+					comes from collaboration, curiosity, and craftsmanship.
+					<p>
+						Have fun! If you get stuck, remember to
+						<a href="https://docs.astro.build/">read the docs</a>
+						or <a href="https://astro.build/chat"
+							>join us on Discord</a
+						> to ask questions.
+					</p>
+					<p>
+						Looking for a blog template with a bit more personality?
+						Check out
+						<a href="https://github.com/Charca/astro-blog-template"
+							>astro-blog-template</a
+						>
+						by <a href="https://twitter.com/Charca">Maxi Ferreira</a
+						>.
+					</p>
+				</div>
+				<div>
+					<div class="hero-image"></div>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
