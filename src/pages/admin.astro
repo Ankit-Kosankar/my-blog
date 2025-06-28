@@ -1,0 +1,33 @@
+---
+// Admin page for Netlify CMS
+---
+
+<html>
+  <head>
+    <title>Admin</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <script>
+      // TypeScript declaration for netlifyIdentity
+      declare global {
+        interface Window {
+          netlifyIdentity: {
+            on: (event: string, callback: (user: any) => void) => void;
+            open: () => void;
+          };
+        }
+      }
+
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", (user: any) => {
+          if (!user) {
+            window.netlifyIdentity.open();
+          }
+        });
+      }
+    </script>
+    <script src="/admin/config.yml" type="text/yaml"></script>
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  </body>
+</html>

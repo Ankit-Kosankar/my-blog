@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+import '../styles/blogpreview.css';
+
+// Get the three most recent blog posts
+const allPosts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const recentPosts = allPosts.slice(0, 3);
+---
+
+<section class="blog-preview">
+	<h2>Latest Blog Posts</h2>
+	<ul>
+		{
+			recentPosts.map((post) => (
+				<li class="blog-preview-item">
+					<a href={`/blog/${post.id}/`} class="blog-preview-link">
+						<h3 class="blog-preview-title">{post.data.title}</h3>
+						<p class="blog-preview-description">{post.data.description}</p>
+						<time class="blog-preview-date">
+							<FormattedDate date={post.data.pubDate} />
+						</time>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+	<div class="blog-preview-view-all">
+		<a href="/blog">View All Posts →</a>
+	</div>
+</section> 

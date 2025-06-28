@@ -7,14 +7,14 @@
 :root {
 	--accent: #2337ff;
 	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
+	--black: #0f1219;
+	--gray: #60739f;
+	--gray-light: #e5e9f0;
+	--gray-dark: #222939;
+	--gray-gradient: rgba(229, 233, 240, 0.5), #fff;
 	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+		0 2px 6px rgba(96, 115, 159, 0.25), 0 8px 24px rgba(96, 115, 159, 0.33),
+		0 16px 32px rgba(96, 115, 159, 0.33);
 }
 @font-face {
 	font-family: 'Atkinson';
@@ -39,7 +39,7 @@ body {
 	background-size: 100% 600px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
+	color: var(--gray-dark);
 	font-size: 1em;
 	line-height: 1.5;
 }
@@ -57,7 +57,7 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
+	color: var(--black);
 	line-height: 1.2;
 }
 h1 {
@@ -108,7 +108,7 @@ img {
 }
 code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
+	background-color: var(--gray-light);
 	border-radius: 2px;
 }
 pre {
@@ -126,7 +126,7 @@ blockquote {
 }
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+	border-top: 1px solid var(--gray-light);
 }
 @media (max-width: 720px) {
 	body {
@@ -154,13 +154,3 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
-
- /* Image container styling */
- .hero-image {
-	width: 280px;
-	height: 280px;
-	position: relative;
-	border-radius: 50%;
-	overflow: hidden;
-	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
