@@ -6,10 +6,70 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
+import { getMediumPosts} from '../../utils/getMediumPosts';
+import { parseISO, parse } from 'date-fns';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+const POSTS_PER_PAGE = 5;
+const page = Number(Astro.url.searchParams.get('page') || 1);
+
+function parseBlogDate(dateStr: string | Date) {
+  if (dateStr instanceof Date) return dateStr;
+  if (typeof dateStr !== 'string') return new Date();
+
+  // Try ISO first
+  const isoDate = parseISO(dateStr);
+  if (isoDate instanceof Date && !isNaN(isoDate.valueOf())) {
+    return isoDate;
+  }
+  // Try 'MMM dd yyyy'
+  const customDate = parse(dateStr, 'MMM dd yyyy', new Date());
+  if (customDate instanceof Date && !isNaN(customDate.valueOf())) {
+    return customDate;
+  }
+  // Fallback: now
+  return new Date();
+}
+
+// Fetch local posts
+const allLocalPosts = await getCollection('blog');
+console.log('🔍 Debug: Found', allLocalPosts.length, 'local posts');
+
+const localPosts = allLocalPosts.map(post => {
+  const link = `/blog/${post.id.replace(/\.mdx?$/, '')}/`;
+  console.log('🔗 Debug: Post', post.data.title, '->', link);
+  return {
+    title: post.data.title,
+    link: link,
+    pubDate: parseBlogDate(post.data.pubDate),
+    source: 'local',
+  };
+});
+
+// Fetch Medium posts
+const mediumPosts = await getMediumPosts(5);
+
+// Combine and sort
+const allPosts : any = [...localPosts, ...mediumPosts].sort(
+  (a, b) => b.pubDate.valueOf() - a.pubDate.valueOf()
 );
+
+// Pagination
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+const paginatedPosts = allPosts.slice(
+  (page - 1) * POSTS_PER_PAGE,
+  page * POSTS_PER_PAGE
+);
+
+type BlogPost = {
+  title: string;
+  link: string;
+  pubDate: Date;
+  source: string;
+};
+
+// const posts = (await getCollection('blog')).sort(
+// 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+// );
 ---
 
 <!doctype html>
@@ -35,7 +95,7 @@ const posts = (await getCollection('blog')).sort(
 				text-decoration: none;
 				transition: 0.2s ease;
 			}
-			ul li:first-child {
+			/* ul li:first-child {
 				width: 100%;
 				margin-bottom: 1rem;
 				text-align: center;
@@ -45,7 +105,7 @@ const posts = (await getCollection('blog')).sort(
 			}
 			ul li:first-child .title {
 				font-size: 2.369rem;
-			}
+			} */
 			ul li img {
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
@@ -92,21 +152,29 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
+					paginatedPosts.map((allPosts: BlogPost) => (
 							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
+							<a href={allPosts.link} target={allPosts.source === 'medium' ? "_blank" : "_self"}>
+								{allPosts.title}
+							</a>
+							<span>({allPosts.source})</span>
+							<FormattedDate date={allPosts.pubDate} />
 							</li>
 						))
 					}
+					
 				</ul>
+
+				<nav>
+					{Array.from({ length: totalPages }, (_, i) => (
+					  <a
+						href={`?page=${i + 1}`}
+						style={page === i + 1 ? "font-weight: bold;" : ""}
+					  >
+						{i + 1}
+					  </a>
+					))}
+				  </nav>
 			</section>
 		</main>
 		<Footer />

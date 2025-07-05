@@ -2,32 +2,43 @@
 // Admin page for Netlify CMS
 ---
 
-<html>
+<html lang="en">
   <head>
-    <title>Admin</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Blog CMS</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      #nc-root {
+        height: 100vh;
+      }
+    </style>
   </head>
   <body>
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
     <script>
-      // TypeScript declaration for netlifyIdentity
-      declare global {
-        interface Window {
-          netlifyIdentity: {
-            on: (event: string, callback: (user: any) => void) => void;
-            open: () => void;
-          };
+      // Configure CMS for local development
+      if (typeof (window as any).CMS !== 'undefined') {
+        console.log('Netlify CMS loaded successfully');
+        
+        // Enable local backend for development
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          (window as any).CMS.registerBackend('git-gateway', {
+            init: () => ({
+              login: () => Promise.resolve(),
+              logout: () => Promise.resolve(),
+              getToken: () => Promise.resolve('dummy-token'),
+              authComponent: () => null,
+            }),
+          });
         }
-      }
-
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user: any) => {
-          if (!user) {
-            window.netlifyIdentity.open();
-          }
-        });
+      } else {
+        console.error('Failed to load Netlify CMS');
       }
     </script>
-    <script src="/admin/config.yml" type="text/yaml"></script>
-    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
   </body>
 </html>

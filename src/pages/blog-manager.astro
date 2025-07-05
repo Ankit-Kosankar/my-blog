@@ -1,0 +1,302 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title="Blog Manager" description="Manage your blog posts" />
+		<style>
+			.blog-manager {
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 2rem;
+			}
+			
+			.form-group {
+				margin-bottom: 1.5rem;
+			}
+			
+			.form-group label {
+				display: block;
+				margin-bottom: 0.5rem;
+				font-weight: 600;
+				color: var(--black);
+			}
+			
+			.form-group input,
+			.form-group textarea {
+				width: 100%;
+				padding: 0.75rem;
+				border: 1px solid var(--gray-light);
+				border-radius: 4px;
+				font-size: 1rem;
+				font-family: inherit;
+			}
+			
+			.form-group textarea {
+				min-height: 200px;
+				resize: vertical;
+			}
+			
+			.btn {
+				padding: 0.75rem 1.5rem;
+				border: none;
+				border-radius: 4px;
+				font-size: 1rem;
+				cursor: pointer;
+				transition: background-color 0.2s ease;
+			}
+			
+			.btn-primary {
+				background-color: var(--accent);
+				color: white;
+			}
+			
+			.btn-primary:hover {
+				background-color: var(--accent-dark);
+			}
+			
+			.btn-danger {
+				background-color: #dc3545;
+				color: white;
+			}
+			
+			.btn-danger:hover {
+				background-color: #c82333;
+			}
+			
+			.blog-list {
+				margin-top: 3rem;
+			}
+			
+			.blog-item {
+				border: 1px solid var(--gray-light);
+				border-radius: 8px;
+				padding: 1rem;
+				margin-bottom: 1rem;
+				background: white;
+			}
+			
+			.blog-item h3 {
+				margin: 0 0 0.5rem 0;
+				color: var(--black);
+			}
+			
+			.blog-item p {
+				margin: 0 0 1rem 0;
+				color: var(--gray);
+			}
+			
+			.blog-actions {
+				display: flex;
+				gap: 0.5rem;
+			}
+			
+			.message {
+				padding: 1rem;
+				border-radius: 4px;
+				margin-bottom: 1rem;
+			}
+			
+			.message.success {
+				background-color: #d4edda;
+				color: #155724;
+				border: 1px solid #c3e6cb;
+			}
+			
+			.message.error {
+				background-color: #f8d7da;
+				color: #721c24;
+				border: 1px solid #f5c6cb;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="blog-manager">
+				<h1>Blog Manager</h1>
+				
+				<div id="message"></div>
+				
+				<form id="blogForm">
+					<div class="form-group">
+						<label for="title">Title *</label>
+						<input type="text" id="title" name="title" required>
+					</div>
+					
+					<div class="form-group">
+						<label for="description">Description</label>
+						<input type="text" id="description" name="description">
+					</div>
+					
+					<div class="form-group">
+						<label for="heroImage">Hero Image URL</label>
+						<input type="url" id="heroImage" name="heroImage">
+					</div>
+					
+					<div class="form-group">
+						<label for="content">Content (Markdown) *</label>
+						<textarea id="content" name="content" required></textarea>
+					</div>
+					
+					<button type="submit" class="btn btn-primary">Create Blog Post</button>
+				</form>
+				
+				<div class="blog-list">
+					<h2>Existing Blog Posts</h2>
+					<div id="blogList">Loading...</div>
+				</div>
+			</div>
+		</main>
+		<Footer />
+		
+		<script>
+			let editingId: string | null = null;
+			
+			// Load existing blogs
+			async function loadBlogs() {
+				try {
+					const response = await fetch('/api/blogs');
+					const blogs = await response.json();
+					
+					const blogList = document.getElementById('blogList');
+					if (blogList) {
+						blogList.innerHTML = blogs.map((blog: any) => `
+							<div class="blog-item">
+								<h3>${blog.title}</h3>
+								<p>${blog.description || 'No description'}</p>
+								<p><small>Published: ${new Date(blog.pubDate).toLocaleDateString()}</small></p>
+								<div class="blog-actions">
+									<button class="btn btn-primary" onclick="editBlog('${blog.id}')">Edit</button>
+									<button class="btn btn-danger" onclick="deleteBlog('${blog.id}')">Delete</button>
+								</div>
+							</div>
+						`).join('');
+					}
+				} catch (error) {
+					showMessage('Failed to load blogs', 'error');
+				}
+			}
+			
+			// Create or update blog
+			async function submitBlog(event: Event) {
+				event.preventDefault();
+				
+				const target = event.target as HTMLFormElement;
+				const formData = new FormData(target);
+				const data = {
+					title: formData.get('title'),
+					description: formData.get('description'),
+					heroImage: formData.get('heroImage'),
+					content: formData.get('content')
+				};
+				
+				try {
+					const url = editingId ? `/api/blogs/${editingId}` : '/api/blogs';
+					const method = editingId ? 'PUT' : 'POST';
+					
+					const response = await fetch(url, {
+						method,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(data)
+					});
+					
+					const result = await response.json();
+					
+					if (response.ok) {
+						showMessage(result.message, 'success');
+						target.reset();
+						editingId = null;
+						const submitButton = document.querySelector('.btn-primary') as HTMLButtonElement;
+						if (submitButton) {
+							submitButton.textContent = 'Create Blog Post';
+						}
+						loadBlogs();
+					} else {
+						showMessage(result.error, 'error');
+					}
+				} catch (error) {
+					showMessage('Failed to save blog post', 'error');
+				}
+			}
+			
+			// Edit blog
+			async function editBlog(id: string) {
+				try {
+					const response = await fetch('/api/blogs');
+					const blogs = await response.json();
+					const blog = blogs.find((b: any) => b.id === id);
+					
+					if (blog) {
+						const titleInput = document.getElementById('title') as HTMLInputElement;
+						const descriptionInput = document.getElementById('description') as HTMLInputElement;
+						const heroImageInput = document.getElementById('heroImage') as HTMLInputElement;
+						const contentTextarea = document.getElementById('content') as HTMLTextAreaElement;
+						
+						if (titleInput) titleInput.value = blog.title;
+						if (descriptionInput) descriptionInput.value = blog.description || '';
+						if (heroImageInput) heroImageInput.value = blog.heroImage || '';
+						if (contentTextarea) contentTextarea.value = blog.content;
+						
+						editingId = id;
+						const submitButton = document.querySelector('.btn-primary') as HTMLButtonElement;
+						if (submitButton) {
+							submitButton.textContent = 'Update Blog Post';
+						}
+					}
+				} catch (error) {
+					showMessage('Failed to load blog for editing', 'error');
+				}
+			}
+			
+			// Delete blog
+			async function deleteBlog(id: string) {
+				if (!confirm('Are you sure you want to delete this blog post?')) {
+					return;
+				}
+				
+				try {
+					const response = await fetch(`/api/blogs/${id}`, {
+						method: 'DELETE'
+					});
+					
+					const result = await response.json();
+					
+					if (response.ok) {
+						showMessage(result.message, 'success');
+						loadBlogs();
+					} else {
+						showMessage(result.error, 'error');
+					}
+				} catch (error) {
+					showMessage('Failed to delete blog post', 'error');
+				}
+			}
+			
+			// Show message
+			function showMessage(text: string, type: 'success' | 'error') {
+				const messageDiv = document.getElementById('message');
+				if (messageDiv) {
+					messageDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+					setTimeout(() => {
+						if (messageDiv) {
+							messageDiv.innerHTML = '';
+						}
+					}, 5000);
+				}
+			}
+			
+			// Initialize
+			const blogForm = document.getElementById('blogForm');
+			if (blogForm) {
+				blogForm.addEventListener('submit', submitBlog);
+			}
+			loadBlogs();
+		</script>
+	</body>
+</html> 

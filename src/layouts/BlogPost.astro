@@ -5,10 +5,31 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
+import { parseISO, parse } from 'date-fns';
 
 type Props = CollectionEntry<'blog'>['data'];
 
+function parseBlogDate(dateStr: string | Date) {
+	if (dateStr instanceof Date) return dateStr;
+	if (typeof dateStr !== 'string') return new Date();
+
+	// Try ISO first
+	const isoDate = parseISO(dateStr);
+	if (isoDate instanceof Date && !isNaN(isoDate.valueOf())) {
+		return isoDate;
+	}
+	// Try 'MMM dd yyyy'
+	const customDate = parse(dateStr, 'MMM dd yyyy', new Date());
+	if (customDate instanceof Date && !isNaN(customDate.valueOf())) {
+		return customDate;
+	}
+	// Fallback: now
+	return new Date();
+}
+
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const parsedPubDate = parseBlogDate(pubDate);
+const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 ---
 
 <html lang="en">
@@ -70,11 +91,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 					<div class="prose">
 						<div class="title">
 							<div class="date">
-								<FormattedDate date={pubDate} />
+								<FormattedDate date={parsedPubDate} />
 								{
-									updatedDate && (
+									parsedUpdatedDate && (
 										<div class="last-updated-on">
-											Last updated on <FormattedDate date={updatedDate} />
+											Last updated on <FormattedDate date={parsedUpdatedDate} />
 										</div>
 									)
 								}

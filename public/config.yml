@@ -1,0 +1,27 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Enable local backend for development
+local_backend: true
+
+# Display URL for the site
+display_url: http://localhost:4321
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Publish Date", name: "pubDate", widget: "datetime", required: true }
+      - { label: "Updated Date", name: "updatedDate", widget: "datetime" }
+      - { label: "Hero Image", name: "heroImage", widget: "image", required: false, default: "" }
+      - { label: "Body", name: "body", widget: "markdown", required: true }
