@@ -66,10 +66,6 @@ type BlogPost = {
   pubDate: Date;
   source: string;
 };
-
-// const posts = (await getCollection('blog')).sort(
-// 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-// );
 ---
 
 <!doctype html>
@@ -80,6 +76,53 @@ type BlogPost = {
 			main {
 				width: 960px;
 			}
+			
+			.hero-section {
+				/* text-align: center; */
+				margin-bottom: 3rem;
+				padding: 2rem 0;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				/* border: 1px solid var(--gray-light); */
+				color: white;
+				border-radius: 16px;
+				margin-bottom: 2rem;
+				padding-left: 2rem;
+			}
+			
+			.hero-section h1 {
+				font-size: 1rem;
+				margin: 0;
+				text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+			}
+			
+			.hero-section p {
+				font-size: 1rem;
+				margin: 1rem 0 0 0;
+				opacity: 0.9;
+			}
+			
+			.stats {
+				display: flex;
+				justify-content: center;
+				gap: 2rem;
+				margin-top: 1.5rem;
+			}
+			
+			.stat-item {
+				text-align: center;
+			}
+			
+			.stat-number {
+				font-size: 1.5rem;
+				font-weight: bold;
+				display: block;
+			}
+			
+			.stat-label {
+				font-size: 0.9rem;
+				opacity: 0.8;
+			}
+			
 			ul {
 				display: flex;
 				flex-wrap: wrap;
@@ -90,22 +133,24 @@ type BlogPost = {
 			}
 			ul li {
 				width: calc(50% - 1rem);
+				background: #f8f9fa;
+				padding: 1rem;
+				border-radius: 12px;
+				/* border-left: 2px solid var(--accent); */
+				border: 1px solid var(--gray-light);
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
 			}
+			
+			ul li:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+			}
+			
 			ul li * {
 				text-decoration: none;
 				transition: 0.2s ease;
 			}
-			/* ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			} */
+			
 			ul li img {
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
@@ -114,14 +159,37 @@ type BlogPost = {
 				display: block;
 			}
 			.title {
-				margin: 0;
-				color: var(--black);
-				line-height: 1;
+				margin: 0 0 0.5rem 0;
+				/* color: var(--black); */
+				color:var(--gray-dark);
+				line-height: 1.3;
+				font-size: 1rem;
 			}
 			.date {
 				margin: 0;
 				color: var(--gray);
+				font-size: 0.9rem;
 			}
+			
+			.source-badge {
+				display: inline-block;
+				padding: 0.2rem 0.6rem;
+				background: var(--accent);
+				color: white;
+				border-radius: 20px;
+				font-size: 0.8rem;
+				margin-left: 0.5rem;
+				font-weight: 500;
+			}
+			
+			.source-badge.medium {
+				background: #00ab6c;
+			}
+			
+			.source-badge.local {
+				background: #007acc;
+			}
+			
 			ul li a:hover h4,
 			ul li a:hover .date {
 				color: var(--accent);
@@ -129,19 +197,55 @@ type BlogPost = {
 			ul a:hover img {
 				box-shadow: var(--box-shadow);
 			}
+			
+			.pagination {
+				display: flex;
+				justify-content: center;
+				gap: 1rem;
+				margin-top: 3rem;
+			}
+			
+			.pagination a {
+				padding: 0.5rem 1rem;
+				background: #f8f9fa;
+				border-radius: 6px;
+				text-decoration: none;
+				color: var(--black);
+				transition: all 0.2s ease;
+			}
+			
+			.pagination a:hover {
+				background: var(--accent);
+				color: white;
+			}
+
+			.blog-preview-date {
+				font-size: 0.85rem;
+				color: var(--gray);
+				margin: 0;
+				font-style: italic;
+			}
+
 			@media (max-width: 720px) {
+				.hero-section h1 {
+					/* font-size: 1.5rem; */
+				}
+				
+				.stats {
+					flex-direction: column;
+					gap: 1rem;
+				}
+				
 				ul {
-					gap: 0.5em;
+					gap: 1rem;
 				}
 				ul li {
 					width: 100%;
-					text-align: center;
 				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+				
+				.pagination {
+					flex-wrap: wrap;
+					gap: 0.5rem;
 				}
 			}
 		</style>
@@ -149,32 +253,56 @@ type BlogPost = {
 	<body>
 		<Header />
 		<main>
+			<!-- Hero Section -->
+			<div class="hero-section">
+				<h1>📚 My Dev Notebook</h1>
+				<p>Here, I share what I learn — one topic at a time.
+				   Each post reflects my understanding, experiences, and takeaways as I explore new ideas and challenges</p>
+				<!-- <div class="stats">
+					<div class="stat-item">
+						<span class="stat-number">{allPosts.length}</span>
+						<span class="stat-label">Tutorials</span>
+					</div>
+					<div class="stat-item">
+						<span class="stat-number">{localPosts.length}</span>
+						<span class="stat-label">Study Notes</span>
+					</div>
+					<div class="stat-item">
+						<span class="stat-number">{mediumPosts.length}</span>
+						<span class="stat-label">Published Tips</span>
+					</div>
+				</div> -->
+			</div>
+
 			<section>
 				<ul>
 					{
-					paginatedPosts.map((allPosts: BlogPost) => (
+					paginatedPosts.map((post: BlogPost) => (
 							<li>
-							<a href={allPosts.link} target={allPosts.source === 'medium' ? "_blank" : "_self"}>
-								{allPosts.title}
-							</a>
-							<span>({allPosts.source})</span>
-							<FormattedDate date={allPosts.pubDate} />
+								<a href={post.link} target={post.source === 'medium' ? "_blank" : "_self"}>
+									<h4 class="title">{post.title}</h4>
+									<time class="blog-preview-date">
+										<FormattedDate date={post.pubDate} />
+									</time>
+									{/* <span class={`source-badge ${post.source}`}>
+										{post.source === 'medium' ? '📖 Tutorial' : '💡 Study Note'}
+									</span> */}
+								</a>
 							</li>
 						))
 					}
-					
 				</ul>
 
-				<nav>
+				<nav class="pagination">
 					{Array.from({ length: totalPages }, (_, i) => (
 					  <a
 						href={`?page=${i + 1}`}
-						style={page === i + 1 ? "font-weight: bold;" : ""}
+						style={page === i + 1 ? "font-weight: bold; background: var(--accent); color: white;" : ""}
 					  >
 						{i + 1}
 					  </a>
 					))}
-				  </nav>
+				</nav>
 			</section>
 		</main>
 		<Footer />

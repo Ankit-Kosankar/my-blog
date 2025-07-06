@@ -91,11 +91,15 @@ const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 					<div class="prose">
 						<div class="title">
 							<div class="date">
-								<FormattedDate date={parsedPubDate} />
+								<time class="blog-preview-date">
+									<FormattedDate date={parsedPubDate} />
+								</time>
 								{
 									parsedUpdatedDate && (
 										<div class="last-updated-on">
-											Last updated on <FormattedDate date={parsedUpdatedDate} />
+											Last updated on <time class="blog-preview-date">
+												<FormattedDate date={parsedUpdatedDate} />
+											</time>
 										</div>
 									)
 								}
