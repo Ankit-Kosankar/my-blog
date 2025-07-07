@@ -34,6 +34,7 @@ body {
 	font-family: 'Atkinson', sans-serif;
 	margin: 0;
 	padding: 0;
+	padding-top: 80px; /* Add padding for fixed header */
 	text-align: left;
 	background: linear-gradient(var(--gray-gradient)) no-repeat;
 	background-size: 100% 600px;
@@ -131,6 +132,7 @@ hr {
 @media (max-width: 720px) {
 	body {
 		font-size: 18px;
+		padding-top: 70px; /* Slightly less padding on mobile */
 	}
 	main {
 		padding: 1em;
