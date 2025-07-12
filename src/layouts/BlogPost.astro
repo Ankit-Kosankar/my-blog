@@ -42,9 +42,10 @@ const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 			}
 
 			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+				width: 80%;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 3em 1em;
 			}
 			.hero-image {
 				width: 100%;
@@ -56,10 +57,10 @@ const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 				box-shadow: var(--box-shadow);
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
+				width: 100%;
+				max-width: 100%;
+				margin: 0;
+				padding: 0;
 				color: var(--gray-dark);
 			}
 			.title {
@@ -77,6 +78,17 @@ const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+			
+			@media (max-width: 720px) {
+				main {
+					width: 100%;
+					padding: 1em;
+				}
+				
+				.title h1 {
+					font-size: 2rem;
+				}
 			}
 		</style>
 	</head>

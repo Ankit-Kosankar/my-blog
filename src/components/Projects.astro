@@ -1,0 +1,156 @@
+---
+// Projects component to display portfolio projects
+---
+
+<div class="projects-container">
+	<div class="project-grid">
+		<div class="project-card">
+			<h3>Financial Microservices Platform</h3>
+			<p class="project-description">
+				Designed and implemented a scalable microservices architecture for a financial services platform.
+				Handled high-frequency trading data processing with real-time analytics.
+			</p>
+			<div class="project-tech">
+				<span class="tech-tag">Java</span>
+				<span class="tech-tag">Spring Boot</span>
+				<span class="tech-tag">PostgreSQL</span>
+				<span class="tech-tag">Docker</span>
+				<span class="tech-tag">Kubernetes</span>
+			</div>
+			<div class="project-links">
+				<a href="#" class="project-link">View Details</a>
+			</div>
+		</div>
+
+		<div class="project-card">
+			<h3>E-commerce Backend System</h3>
+			<p class="project-description">
+				Built a robust REST API for an e-commerce platform with inventory management, 
+				order processing, and payment integration.
+			</p>
+			<div class="project-tech">
+				<span class="tech-tag">Node.js</span>
+				<span class="tech-tag">Express</span>
+				<span class="tech-tag">MongoDB</span>
+				<span class="tech-tag">Redis</span>
+				<span class="tech-tag">AWS</span>
+			</div>
+			<div class="project-links">
+				<a href="#" class="project-link">View Details</a>
+			</div>
+		</div>
+
+		<div class="project-card">
+			<h3>Real-time Chat Application</h3>
+			<p class="project-description">
+				Developed a real-time messaging application with WebSocket connections, 
+				user authentication, and message persistence.
+			</p>
+			<div class="project-tech">
+				<span class="tech-tag">React</span>
+				<span class="tech-tag">Socket.io</span>
+				<span class="tech-tag">Node.js</span>
+				<span class="tech-tag">MongoDB</span>
+				<span class="tech-tag">JWT</span>
+			</div>
+			<div class="project-links">
+				<a href="#" class="project-link">View Details</a>
+			</div>
+		</div>
+
+		<div class="project-card">
+			<h3>Performance Monitoring Dashboard</h3>
+			<p class="project-description">
+				Created a comprehensive monitoring system for tracking application performance,
+				error rates, and system health metrics.
+			</p>
+			<div class="project-tech">
+				<span class="tech-tag">Python</span>
+				<span class="tech-tag">Django</span>
+				<span class="tech-tag">InfluxDB</span>
+				<span class="tech-tag">Grafana</span>
+				<span class="tech-tag">Prometheus</span>
+			</div>
+			<div class="project-links">
+				<a href="#" class="project-link">View Details</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.projects-container {
+		margin: 2rem 0;
+	}
+
+	.project-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+		margin-top: 2rem;
+	}
+
+	.project-card {
+		border: 1px solid #e5e7eb;
+		border-radius: 8px;
+		padding: 1.5rem;
+		background: #ffffff;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.project-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.project-card h3 {
+		margin: 0 0 1rem 0;
+		color: #1f2937;
+		font-size: 1.25rem;
+		font-weight: 600;
+	}
+
+	.project-description {
+		color: #6b7280;
+		line-height: 1.6;
+		margin-bottom: 1rem;
+	}
+
+	.project-tech {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+
+	.tech-tag {
+		background: #f3f4f6;
+		color: #374151;
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		font-size: 0.875rem;
+		font-weight: 500;
+	}
+
+	.project-links {
+		margin-top: 1rem;
+	}
+
+	.project-link {
+		color: #3b82f6;
+		text-decoration: none;
+		font-weight: 500;
+		transition: color 0.2s ease;
+	}
+
+	.project-link:hover {
+		color: #2563eb;
+		text-decoration: underline;
+	}
+
+	@media (max-width: 768px) {
+		.project-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
