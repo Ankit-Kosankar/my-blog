@@ -4,55 +4,145 @@ import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
 ---
 
 <Layout
-	title="About Me"
-	description="Learn more about my background, experience, and passion for software engineering"
-	heroImage={AboutHeroImage}
+  title="About Me"
+  description="Learn more about my background, experience, and passion for software engineering"
+  heroImage={AboutHeroImage}
 >
-	<p>
-		AS A Professional , I am a software Engineer. My experise is on Backend System Designs and i can also work
-		on frontend systems.
-		I have around 3 yeras of Experience In Software Industry devloping REST API in Microservice arichitecture
-		Proficient in Designing complex systems and analyzing their performance.
-		
-		
-	</p>
 
-	<p>
-		💡 What sets me apart is a systems-thinking mindset and a focus on clean, efficient, and well-tested code. I thrive in collaborative environments where problem-solving, architecture discussions, and code quality are priorities.
-		Being a Developer is tough these days too many things to learn and to know , and AI just made it worse 
-		learning and implementing has become fast but the learning part is just missing nowadays only the implementation part is there
-		vibe coding is cool , in the end what matters is the work was done.
-		Currently, I'm deepening my knowledge in:
-		Distributed systems
-		Cloud infrastructure (AWS/Azure/GCP)
-		Performance optimization and monitoring
-		Always open to connect, collaborate, and learn from fellow tech professionals. 🚀
-	</p>
+  <p>
+    I'm a passionate Software Engineer with ~3 years of professional experience, primarily focused on backend system design and development. I specialize in building scalable, maintainable REST APIs using a microservices architecture. While backend is my strong suit, I’m also comfortable working across the stack to deliver complete, production-ready features.
+  </p>
 
-	<p>
-		This is my personal space where is share and write blogs articles from my own perspective
-		and what i feel about some technologies and much more .
-		If i found something interesting tips or tricks i do share those,and dont be surprised if you
-		found something random here apart from tech, I might write something random stuff or thing if interesting
-		well I do and learn things aside from my professional job
-		so for some it might get random but thats just me being me XD
-	</p>
+  <p>
+    💡 What sets me apart is a systems-thinking mindset, attention to clean architecture, and a strong focus on writing well-tested, maintainable code. I thrive in collaborative environments that value problem-solving, architecture discussions, and continuous improvement.
+  </p>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
+  <p>
+    I genuinely believe being a developer today is both exciting and overwhelming — with the rapid pace of AI and tech evolution, implementation has become easier, but deep learning is often skipped. I try to slow things down, reflect, and truly understand what I build. "Vibe coding" is fun, but what really matters is building solid, meaningful software.
+  </p>
 
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
+  <p>
+	I love breaking down complex concepts, experimenting with tools, and vibing with code. With AI speeding things up, it’s tempting to just build fast — but I still enjoy diving deep and understanding what’s really going on under the hood. This blog is where I share what I learn, think, and occasionally just random ideas outside of tech.
+  </p>
+
+  <section class="about-section">
+    <div class="section-header">
+      <div class="section-marker"></div>
+      <h3>👨‍💻 Professional Summary</h3>
+    </div>
+    <p>
+      I'm a passionate Software Engineer with ~3 years of experience in designing and building scalable, backend-first web applications using microservices. I specialize in RESTful APIs, system design, and clean architecture — while also working across the stack when needed.
+    </p>
+  </section>
+
+  <section class="about-section">
+    <div class="section-header">
+      <div class="section-marker"></div>
+      <h3>🧠 Core Strengths</h3>
+    </div>
+    <ul>
+      <li>Backend System Design (REST, Microservices)</li>
+      <li>Frontend Integration & Full Stack Delivery</li>
+      <li>Performance Tuning & Observability</li>
+      <li>Clean Code, Test Coverage & CI/CD Awareness</li>
+    </ul>
+  </section>
+
+  <section class="about-section">
+    <div class="section-header">
+      <div class="section-marker"></div>
+      <h3>🌱 Current Focus</h3>
+    </div>
+    <ul>
+      <li>Distributed Systems & Event-Driven Architecture</li>
+      <li>Cloud Infrastructure (AWS, GCP)</li>
+      <li>Monitoring, Logging, and Performance Profiling</li>
+      <li>Building side projects & refining design skills</li>
+    </ul>
+  </section>
+
+  <section class="about-section">
+    <div class="section-header">
+      <div class="section-marker"></div>
+      <h3>📝 Personal Vibes</h3>
+    </div>
+    <p>
+      I love breaking down complex concepts, experimenting with tools, and vibing with code. With AI speeding things up, it’s tempting to just build fast — but I still enjoy diving deep and understanding what’s really going on under the hood. This blog is where I share what I learn, think, and occasionally just random ideas outside of tech.
+    </p>
+  </section>
 </Layout>
+
+
+<style>
+	.about-section {
+  margin-bottom: 2rem;
+  padding-left: 1rem;
+  border-left: 4px solid #3b82f6; /* Tailwind blue-500 */
+  border-radius: 8px;
+  background-color: #f9fafb;
+  padding: 1rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.section-marker {
+  width: 10px;
+  height: 10px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+</style>
+
+
+<!-- ---
+import Layout from '../layouts/Page.astro';
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+---
+
+<Layout
+  title="About Me"
+  description="Learn more about my background, experience, and passion for software engineering"
+  heroImage={AboutHeroImage}
+>
+  <p>
+    I'm a passionate Software Engineer with ~3 years of professional experience, primarily focused on backend system design and development. I specialize in building scalable, maintainable REST APIs using a microservices architecture. While backend is my strong suit, I’m also comfortable working across the stack to deliver complete, production-ready features.
+  </p>
+
+  <p>
+    💡 What sets me apart is a systems-thinking mindset, attention to clean architecture, and a strong focus on writing well-tested, maintainable code. I thrive in collaborative environments that value problem-solving, architecture discussions, and continuous improvement.
+  </p>
+
+  <p>
+    I genuinely believe being a developer today is both exciting and overwhelming — with the rapid pace of AI and tech evolution, implementation has become easier, but deep learning is often skipped. I try to slow things down, reflect, and truly understand what I build. "Vibe coding" is fun, but what really matters is building solid, meaningful software.
+  </p>
+
+  <p>
+    🔭 Currently, I'm diving deeper into:
+    <ul>
+      <li>Distributed Systems & Event-Driven Architecture</li>
+      <li>Cloud Infrastructure (AWS, GCP)</li>
+      <li>Performance Optimization and Monitoring</li>
+      <li>DevOps Practices and Automation</li>
+    </ul>
+    I'm always open to learning from peers, collaborating on side projects, or just chatting about tech and ideas. 🚀
+  </p>
+
+  <p>
+    This blog is my personal space to share what I learn, build, and think. Expect deep dives into system design, dev tips, thoughts on new tools — and occasionally, some completely random but interesting topics. I explore things beyond my day job, and I enjoy writing about them too.
+  </p>
+
+  <p>
+    Thanks for stopping by. If something resonates or sparks a thought — feel free to reach out!
+  </p>
+</Layout> -->

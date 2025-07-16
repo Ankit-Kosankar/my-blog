@@ -58,9 +58,9 @@ const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 			}
 			.prose {
 				width: 100%;
-				max-width: 100%;
-				margin: 0;
-				padding: 0;
+				max-width: 1020px;
+				margin: 0 auto;
+				padding: 1em;
 				color: var(--gray-dark);
 			}
 			.title {
@@ -78,6 +78,13 @@ const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+			
+			.prose p {
+				font-size: 1.1rem;
+				line-height: 1.7;
+				margin-bottom: 1.5rem;
+				color: var(--gray-dark);
 			}
 			
 			@media (max-width: 720px) {
