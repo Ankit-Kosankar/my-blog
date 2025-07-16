@@ -1,0 +1,128 @@
+---
+// Skills.astro
+---
+
+<section class="skills">
+    <h2>Skills & Technologies</h2>
+    
+    <div class="skills-grid">
+      <div class="skill-category">
+        <h3>Backend Development</h3>
+        <div class="skills-list">
+          <span class="skill-tag">Java</span>
+          <span class="skill-tag">Spring Boot</span>
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">PostgreSQL</span>
+          <span class="skill-tag">Redis</span>
+          <span class="skill-tag">MongoDB</span>
+          <span class="skill-tag">Apache Kafka</span>
+          <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">GraphQL</span>
+        </div>
+      </div>
+  
+      <div class="skill-category">
+        <h3>Frontend Development</h3>
+        <div class="skills-list">
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">HTML/CSS</span>
+          <span class="skill-tag">Tailwind CSS</span>
+          <span class="skill-tag">Next.js</span>
+          <span class="skill-tag">Astro</span>
+        </div>
+      </div>
+  
+      <div class="skill-category">
+        <h3>DevOps & Tools</h3>
+        <div class="skills-list">
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">Kubernetes</span>
+          <span class="skill-tag">AWS</span>
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">CI/CD</span>
+          <span class="skill-tag">Linux</span>
+          <span class="skill-tag">Microservices</span>
+          <span class="skill-tag">System Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <style>
+    .skills {
+      margin: 3rem 0;
+    }
+  
+    .skills h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: #2c3e50;
+    }
+  
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+  
+    .skill-category {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      border: 1px solid #e9ecef;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+  
+    .skill-category:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  
+    .skill-category h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #495057;
+    }
+  
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  
+    .skill-tag {
+      background: #fff;
+      color: #495057;
+      padding: 0.3rem 0.8rem;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid #dee2e6;
+      transition: all 0.2s ease;
+    }
+  
+    .skill-tag:hover {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+  
+    @media (max-width: 768px) {
+      .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+  
+      .skill-category {
+        padding: 1.25rem;
+      }
+  
+      .skills h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>

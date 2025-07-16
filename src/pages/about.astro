@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Page.astro';
 import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+import Skills from '../components/Skills.astro';
+import WorksWith from '../components/WorksWith.astro';
 ---
 
 <Layout
@@ -9,8 +11,10 @@ import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
   heroImage={AboutHeroImage}
 >
 
+  <WorksWith></WorksWith>
+
   <p>
-    I'm a passionate Software Engineer with ~3 years of professional experience, primarily focused on backend system design and development. I specialize in building scalable, maintainable REST APIs using a microservices architecture. While backend is my strong suit, I’m also comfortable working across the stack to deliver complete, production-ready features.
+    I have around 3 years of professional experience, primarily focused on backend system design and development. I specialize in building scalable, maintainable REST APIs using a microservices architecture. While backend is my strong suit, I’m also comfortable working across the stack to deliver complete, production-ready features.
   </p>
 
   <p>
@@ -25,7 +29,9 @@ import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
 	I love breaking down complex concepts, experimenting with tools, and vibing with code. With AI speeding things up, it’s tempting to just build fast — but I still enjoy diving deep and understanding what’s really going on under the hood. This blog is where I share what I learn, think, and occasionally just random ideas outside of tech.
   </p>
 
-  <section class="about-section">
+  
+
+  <!-- <section class="about-section">
     <div class="section-header">
       <div class="section-marker"></div>
       <h3>👨‍💻 Professional Summary</h3>
@@ -69,7 +75,7 @@ import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
     <p>
       I love breaking down complex concepts, experimenting with tools, and vibing with code. With AI speeding things up, it’s tempting to just build fast — but I still enjoy diving deep and understanding what’s really going on under the hood. This blog is where I share what I learn, think, and occasionally just random ideas outside of tech.
     </p>
-  </section>
+  </section> -->
 </Layout>
 
 
