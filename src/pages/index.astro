@@ -11,6 +11,19 @@ import "../styles/hero.css";
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{SITE_TITLE}",
+  "url": "{new URL('/', Astro.site)}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{new URL('/?q={search_term_string}', Astro.site)}",
+    "query-input": "required name=search_term_string"
+  }
+}
+		</script>
 	</head>
 	<body>
 		<Header />

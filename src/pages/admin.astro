@@ -19,7 +19,188 @@
     </style>
   </head>
   <body>
-    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+    <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
+    <script>
+      // Enhanced SEO Analysis with Visual Tools
+      function analyzeSeo({ title, description, body, targetKeyword, tags = [] }) {
+        const text = `${title}\n\n${description}\n\n${body}`;
+        const wordCount = text.split(/\s+/).length;
+        const readingTime = Math.ceil(wordCount / 200);
+        
+        // Keyword density analysis
+        const keywordDensity = targetKeyword ? 
+          (text.toLowerCase().split(targetKeyword.toLowerCase()).length - 1) / wordCount * 100 : 0;
+        
+        // Basic readability (simplified)
+        const avgWordsPerSentence = text.split(/[.!?]+/).length > 0 ? 
+          wordCount / text.split(/[.!?]+/).length : 0;
+        const readabilityScore = Math.max(0, 100 - avgWordsPerSentence * 2);
+        
+        // SEO checks
+        const checks = {
+          titleLength: title.length >= 30 && title.length <= 60,
+          descriptionLength: description.length >= 120 && description.length <= 160,
+          hasKeyword: targetKeyword ? text.toLowerCase().includes(targetKeyword.toLowerCase()) : false,
+          hasTags: tags.length > 0,
+          hasImages: body.includes('![') || body.includes('<img'),
+          hasHeadings: body.includes('#') || body.includes('<h'),
+          wordCount: wordCount >= 300,
+          keywordDensity: keywordDensity >= 0.5 && keywordDensity <= 3
+        };
+        
+        const score = Object.values(checks).filter(Boolean).length * 12.5; // 8 checks = 100 points
+        
+        return { 
+          score: Math.round(score), 
+          wordCount, 
+          readingTime, 
+          keywordDensity: Math.round(keywordDensity * 100) / 100,
+          checks 
+        };
+      }
+
+      // Visual SEO Tools Integration
+      function addSeoTools() {
+        // Google PageSpeed Insights API (free tier)
+        window.checkPageSpeed = function(url) {
+          const apiKey = 'YOUR_API_KEY'; // Get free from Google Cloud Console
+          const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${apiKey}`;
+          return fetch(apiUrl).then(r => r.json());
+        };
+
+        // Lighthouse CI integration (for local testing)
+        window.runLighthouse = function() {
+          if ('lighthouse' in window) {
+            return window.lighthouse(window.location.href, {
+              output: 'html',
+              onlyCategories: ['performance', 'seo', 'accessibility']
+            });
+          }
+          return Promise.resolve('Lighthouse not available');
+        };
+
+        // SEO checklist generator
+        window.generateSeoChecklist = function(data) {
+          const analysis = analyzeSeo(data);
+          return {
+            score: analysis.score,
+            recommendations: [
+              !analysis.checks.titleLength && 'Optimize title length (30-60 chars)',
+              !analysis.checks.descriptionLength && 'Optimize description length (120-160 chars)',
+              !analysis.checks.hasKeyword && 'Include target keyword in content',
+              !analysis.checks.hasTags && 'Add relevant tags',
+              !analysis.checks.hasImages && 'Add images to improve engagement',
+              !analysis.checks.hasHeadings && 'Add proper heading structure',
+              !analysis.checks.wordCount && 'Increase content length (300+ words)',
+              !analysis.checks.keywordDensity && 'Optimize keyword density (0.5-3%)'
+            ].filter(Boolean)
+          };
+        };
+      }
+
+      if (typeof (window).CMS !== 'undefined') {
+        const CMS = (window).CMS;
+        
+        // Enhanced preview with visual SEO tools
+        CMS.registerPreviewTemplate('blog', ({ entry }) => {
+          const data = entry.get('data');
+          const title = data.get('seoTitle') || data.get('title') || '';
+          const description = data.get('seoDescription') || data.get('description') || '';
+          const body = entry.getIn(['data', 'body']) || '';
+          const targetKeyword = data.get('targetKeyword') || '';
+          const tags = data.get('tags') || [];
+          
+          const analysis = analyzeSeo({ title, description, body, targetKeyword, tags });
+          const titleTrim = String(title).slice(0, 60);
+          const descTrim = String(description).slice(0, 160);
+          const url = `${location.origin}/blog/${(data.get('slug') || '').toString()}`;
+          
+          const wrapper = document.createElement('div');
+          wrapper.style.padding = '16px';
+          wrapper.style.fontFamily = 'system-ui, sans-serif';
+          wrapper.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <!-- SERP Preview -->
+              <div>
+                <h3 style="color: #2563eb; margin-bottom: 12px;">🔍 SERP Preview</h3>
+                <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                  <div style="color: #1a0dab; font-size: 18px; line-height: 1.3; margin-bottom: 4px;">${titleTrim}</div>
+                  <div style="color: #006621; font-size: 14px; margin-bottom: 8px;">${url}</div>
+                  <div style="color: #545454; font-size: 14px; line-height: 1.4;">${descTrim}</div>
+                </div>
+              </div>
+              
+              <!-- SEO Analysis -->
+              <div>
+                <h3 style="color: #2563eb; margin-bottom: 12px;">📊 SEO Analysis</h3>
+                <div style="background: #f8fafc; border-radius: 8px; padding: 12px;">
+                  <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                    <div style="font-size: 24px; font-weight: bold; color: ${analysis.score >= 80 ? '#10b981' : analysis.score >= 60 ? '#f59e0b' : '#ef4444'};">
+                      ${analysis.score}/100
+                    </div>
+                    <div style="margin-left: 8px; font-size: 14px; color: #6b7280;">
+                      ${analysis.score >= 80 ? 'Excellent' : analysis.score >= 60 ? 'Good' : 'Needs Work'}
+                    </div>
+                  </div>
+                  
+                  <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">
+                    📝 ${analysis.wordCount} words • ⏱️ ${analysis.readingTime} min read
+                  </div>
+                  
+                  ${targetKeyword ? `<div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">
+                    🎯 Keyword density: ${analysis.keywordDensity}%
+                  </div>` : ''}
+                  
+                  <div style="font-size: 12px;">
+                    <div style="margin-bottom: 4px; ${analysis.checks.titleLength ? 'color: #10b981;' : 'color: #ef4444;'}">
+                      ${analysis.checks.titleLength ? '✅' : '❌'} Title length (${title.length} chars)
+                    </div>
+                    <div style="margin-bottom: 4px; ${analysis.checks.descriptionLength ? 'color: #10b981;' : 'color: #ef4444;'}">
+                      ${analysis.checks.descriptionLength ? '✅' : '❌'} Description length (${description.length} chars)
+                    </div>
+                    <div style="margin-bottom: 4px; ${analysis.checks.hasKeyword ? 'color: #10b981;' : 'color: #ef4444;'}">
+                      ${analysis.checks.hasKeyword ? '✅' : '❌'} Target keyword present
+                    </div>
+                    <div style="margin-bottom: 4px; ${analysis.checks.hasTags ? 'color: #10b981;' : 'color: #ef4444;'}">
+                      ${analysis.checks.hasTags ? '✅' : '❌'} Tags added (${tags.length})
+                    </div>
+                    <div style="margin-bottom: 4px; ${analysis.checks.hasImages ? 'color: #10b981;' : 'color: #ef4444;'}">
+                      ${analysis.checks.hasImages ? '✅' : '❌'} Images included
+                    </div>
+                    <div style="margin-bottom: 4px; ${analysis.checks.hasHeadings ? 'color: #10b981;' : 'color: #ef4444;'}">
+                      ${analysis.checks.hasHeadings ? '✅' : '❌'} Proper headings
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div style="margin-top: 16px; padding: 12px; background: #f1f5f9; border-radius: 8px;">
+              <h4 style="margin: 0 0 8px 0; color: #1e293b;">🚀 Quick Actions</h4>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button onclick="window.open('https://pagespeed.web.dev/', '_blank')" style="padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                  PageSpeed Test
+                </button>
+                <button onclick="window.open('https://search.google.com/test/rich-results', '_blank')" style="padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                  Rich Results Test
+                </button>
+                <button onclick="window.open('https://validator.w3.org/', '_blank')" style="padding: 6px 12px; background: #f59e0b; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                  HTML Validator
+                </button>
+                <button onclick="window.open('https://www.google.com/search?q=' + encodeURIComponent('${title}'), '_blank')" style="padding: 6px 12px; background: #8b5cf6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                  Google Search
+                </button>
+              </div>
+            </div>
+          `;
+          return wrapper;
+        });
+        
+        // Initialize SEO tools
+        addSeoTools();
+      }
+    </script>
     <script>
       // Configure CMS for local development
       if (typeof (window as any).CMS !== 'undefined') {

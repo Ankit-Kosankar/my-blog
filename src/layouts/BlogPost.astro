@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import { parseISO, parse } from 'date-fns';
 
 type Props = CollectionEntry<'blog'>['data'];
@@ -27,14 +28,61 @@ function parseBlogDate(dateStr: string | Date) {
 	return new Date();
 }
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags = [], author } = Astro.props;
 const parsedPubDate = parseBlogDate(pubDate);
 const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
+
+// Related posts by tag overlap (exclude current)
+let related = [] as Array<{ id: string; data: any }>;
+try {
+  const all = await getCollection('blog');
+  const currentId = Astro.params?.slug as string | undefined;
+  if (Array.isArray(tags) && tags.length > 0) {
+    related = all
+      .filter(p => p.id !== currentId)
+      .map(p => ({
+        id: p.id,
+        data: p.data,
+        score: (p.data.tags || []).filter((t: string) => tags.includes(t)).length,
+      }))
+      .filter(p => p.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+  }
+} catch {}
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
+		<!-- BreadcrumbList JSON-LD -->
+		<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{new URL('/', Astro.site)}"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{new URL('/blog/', Astro.site)}"},
+    {"@type": "ListItem", "position": 3, "name": "{title}", "item": "{new URL(Astro.url.pathname, Astro.site)}"}
+  ]
+}
+		</script>
+		<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{title}",
+  "description": "{description}",
+  "datePublished": "{parsedPubDate.toISOString()}",
+  "dateModified": "{parsedUpdatedDate ? parsedUpdatedDate.toISOString() : parsedPubDate.toISOString()}",
+  "author": {"@type": "Person", "name": "{author?.name || 'Ankit Kosankar'}"},
+  "image": {"@type": "ImageObject", "url": "{(heroImage && (new URL(heroImage.src, Astro.site))) || ''}"},
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{new URL(Astro.url.pathname, Astro.site)}"
+  }
+}
+		</script>
 		<style>
 
 			.main-container {
@@ -128,6 +176,18 @@ const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 						</div>
 						<slot />
 					</div>
+						{related.length > 0 && (
+							<section class="prose" aria-label="Related posts">
+								<h2>Related posts</h2>
+								<ul>
+									{related.map((p) => (
+										<li>
+											<a href={`/blog/${p.id}/`}>{p.data.title}</a>
+										</li>
+									))}
+								</ul>
+							</section>
+						)}
 				</article>
 			</main>
 			<Footer />

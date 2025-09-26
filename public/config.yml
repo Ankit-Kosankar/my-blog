@@ -24,4 +24,20 @@ collections:
       - { label: "Publish Date", name: "pubDate", widget: "datetime", required: true }
       - { label: "Updated Date", name: "updatedDate", widget: "datetime" }
       - { label: "Hero Image", name: "heroImage", widget: "image", required: false, default: "" }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Slug", name: "slug", widget: "string", required: false, hint: "Custom URL slug (optional)" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Target Keyword", name: "targetKeyword", widget: "string", required: false }
+      - { label: "SEO Title", name: "seoTitle", widget: "string", required: false, hint: "Optional SERP title" }
+      - { label: "SEO Description", name: "seoDescription", widget: "text", required: false }
+      - { label: "OG Image", name: "ogImage", widget: "image", required: false }
+      - label: "Author"
+        name: "author"
+        widget: "object"
+        collapsed: true
+        required: false
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "URL", name: "url", widget: "string", required: false }
+          - { label: "Avatar", name: "avatar", widget: "image", required: false }
       - { label: "Body", name: "body", widget: "markdown", required: true }
