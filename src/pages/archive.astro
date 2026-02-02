@@ -1,0 +1,213 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import { parseISO, parse } from 'date-fns';
+
+// Get all blog posts
+const allPosts = await getCollection('blog');
+
+function parseBlogDate(dateStr: string | Date) {
+	if (dateStr instanceof Date) return dateStr;
+	if (typeof dateStr !== 'string') return new Date();
+	const isoDate = parseISO(dateStr);
+	if (isoDate instanceof Date && !isNaN(isoDate.valueOf())) {
+		return isoDate;
+	}
+	const customDate = parse(dateStr, 'MMM dd yyyy', new Date());
+	if (customDate instanceof Date && !isNaN(customDate.valueOf())) {
+		return customDate;
+	}
+	return new Date();
+}
+
+// Group posts by year
+const postsByYear = new Map<number, typeof allPosts>();
+allPosts.forEach(post => {
+	const year = parseBlogDate(post.data.pubDate).getFullYear();
+	if (!postsByYear.has(year)) {
+		postsByYear.set(year, []);
+	}
+	postsByYear.get(year)!.push(post);
+});
+
+// Sort years descending
+const sortedYears = Array.from(postsByYear.keys()).sort((a, b) => b - a);
+
+// Sort posts within each year by date (newest first)
+sortedYears.forEach(year => {
+	const posts = postsByYear.get(year)!;
+	posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+});
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead 
+			title={`Archive - ${SITE_TITLE}`} 
+			description="Complete archive of all blog posts organized by year" 
+		/>
+		<style>
+			main {
+				width: 960px;
+			}
+			
+			.hero-section {
+				margin-bottom: 3rem;
+				padding: 2rem 0;
+			}
+			
+			.hero-section h1 {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+				color: var(--black);
+			}
+			
+			.hero-section p {
+				font-size: 1.1rem;
+				color: var(--gray-dark);
+				line-height: 1.6;
+			}
+			
+			.archive-year {
+				margin-bottom: 3rem;
+			}
+			
+			.year-header {
+				font-size: 2rem;
+				color: var(--black);
+				margin-bottom: 1.5rem;
+				padding-bottom: 0.5rem;
+				border-bottom: 2px solid var(--gray-light);
+			}
+			
+			.posts-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			
+			.post-item {
+				margin-bottom: 1rem;
+				padding-left: 1rem;
+				border-left: 3px solid transparent;
+				transition: all 0.2s ease;
+			}
+			
+			.post-item:hover {
+				border-left-color: var(--accent);
+				padding-left: 1.25rem;
+			}
+			
+			.post-item a {
+				text-decoration: none;
+				color: inherit;
+				display: block;
+			}
+			
+			.post-title {
+				font-size: 1.1rem;
+				font-weight: 600;
+				color: var(--black);
+				margin-bottom: 0.25rem;
+			}
+			
+			.post-meta {
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+				font-size: 0.85rem;
+				color: var(--gray);
+			}
+			
+			.stats {
+				display: flex;
+				gap: 2rem;
+				margin-bottom: 3rem;
+				padding: 1.5rem;
+				background: var(--gray-light);
+				border-radius: 12px;
+			}
+			
+			.stat-item {
+				text-align: center;
+			}
+			
+			.stat-number {
+				font-size: 2rem;
+				font-weight: bold;
+				color: var(--accent);
+				display: block;
+			}
+			
+			.stat-label {
+				font-size: 0.9rem;
+				color: var(--gray-dark);
+				margin-top: 0.25rem;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="hero-section">
+				<h1>Archive</h1>
+				<p>
+					Complete archive of all blog posts, organized by year.
+				</p>
+			</div>
+			
+			<div class="stats">
+				<div class="stat-item">
+					<span class="stat-number">{allPosts.length}</span>
+					<span class="stat-label">Total Posts</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">{sortedYears.length}</span>
+					<span class="stat-label">Years</span>
+				</div>
+			</div>
+			
+			{
+				sortedYears.map(year => {
+					const posts = postsByYear.get(year)!;
+					return (
+						<div class="archive-year">
+							<h2 class="year-header">{year}</h2>
+							<ul class="posts-list">
+								{
+									posts.map(post => {
+										const link = `/blog/${post.id.replace(/\.mdx?$/, '')}/`;
+										return (
+											<li class="post-item">
+												<a href={link}>
+													<div class="post-title">{post.data.title}</div>
+													<div class="post-meta">
+														<time>
+															<FormattedDate date={parseBlogDate(post.data.pubDate)} />
+														</time>
+														{post.data.category && (
+															<span>• {post.data.category}</span>
+														)}
+														{post.data.type && (
+															<span>• {post.data.type}</span>
+														)}
+													</div>
+												</a>
+											</li>
+										);
+									})
+								}
+							</ul>
+						</div>
+					);
+				})
+			}
+		</main>
+		<Footer />
+	</body>
+</html>

@@ -5,57 +5,88 @@
 <div class="projects-container">
 	<div class="project-grid">
 		<div class="project-card">
-			<h3>Financial Microservices Platform</h3>
-			<p class="project-description">
-				Designed and implemented a scalable microservices architecture for a financial services platform.
-				Handled high-frequency trading data processing with real-time analytics.
-			</p>
-			<div class="project-tech">
-				<span class="tech-tag">Java</span>
-				<span class="tech-tag">Spring Boot</span>
-				<span class="tech-tag">PostgreSQL</span>
-				<span class="tech-tag">Docker</span>
-				<span class="tech-tag">Kubernetes</span>
-			</div>
-			<div class="project-links">
-				<a href="#" class="project-link">View Details</a>
-			</div>
-		</div>
-
-		<div class="project-card">
 			<h3>E-commerce Backend System</h3>
 			<p class="project-description">
-				Built a robust REST API for an e-commerce platform with inventory management, 
-				order processing, and payment integration.
+				Built a full-featured REST API for an e-commerce platform with inventory management, 
+				order processing, and payment integration. This project taught me the importance of 
+				transaction management and handling concurrent operations in a production environment.
 			</p>
+			<div class="project-highlights">
+				<strong>Key Learnings:</strong>
+				<ul>
+					<li>Implemented optimistic locking to handle concurrent inventory updates</li>
+					<li>Designed RESTful APIs following best practices for scalability</li>
+					<li>Learned the importance of proper transaction boundaries in distributed systems</li>
+				</ul>
+			</div>
 			<div class="project-tech">
-				<span class="tech-tag">
-					Spring Boot</span>
+				<span class="tech-tag">Spring Boot</span>
 				<span class="tech-tag">Java</span>
 				<span class="tech-tag">JPA</span>
-				<span class="tech-tag"></span>
-				<span class="tech-tag">MYSql</span>
+				<span class="tech-tag">MySQL</span>
+				<span class="tech-tag">REST API</span>
 			</div>
 			<div class="project-links">
-				<a href="https://github.com/Ankit-Kosankar/ecommerce" class="">View Details</a>
+				<a href="https://github.com/Ankit-Kosankar/ecommerce" class="project-link" target="_blank" rel="noopener noreferrer">
+					View on GitHub →
+				</a>
 			</div>
 		</div>
 
 		<div class="project-card">
 			<h3>Real-time Chat Application</h3>
 			<p class="project-description">
-				Developed a real-time messaging application with WebSocket connections, 
-				user authentication, and message persistence.
+				Developed a real-time messaging application with WebSocket connections, user authentication, 
+				and message persistence. This project was a deep dive into real-time communication patterns 
+				and managing stateful connections at scale.
 			</p>
+			<div class="project-highlights">
+				<strong>Key Challenges:</strong>
+				<ul>
+					<li>Managing WebSocket connections and handling disconnections gracefully</li>
+					<li>Implementing JWT-based authentication for stateless API design</li>
+					<li>Designing a message persistence layer that balances performance and reliability</li>
+				</ul>
+			</div>
 			<div class="project-tech">
 				<span class="tech-tag">React</span>
-				<span class="tech-tag">Web Socket</span>
+				<span class="tech-tag">WebSocket</span>
 				<span class="tech-tag">Spring Boot</span>
-				<span class="tech-tag">Postgres</span>
+				<span class="tech-tag">PostgreSQL</span>
 				<span class="tech-tag">JWT</span>
 			</div>
 			<div class="project-links">
-				<a href="https://github.com/Ankit-Kosankar/chat-app" class="project-link">View Details</a>
+				<a href="https://github.com/Ankit-Kosankar/chat-app" class="project-link" target="_blank" rel="noopener noreferrer">
+					View on GitHub →
+				</a>
+			</div>
+		</div>
+
+		<div class="project-card">
+			<h3>Microservices Architecture (Work Project)</h3>
+			<p class="project-description">
+				Designed and implemented scalable microservices architectures for financial services platforms. 
+				Worked on high-frequency data processing systems where performance, consistency, and reliability 
+				are critical. This experience shaped my understanding of distributed systems and event-driven architecture.
+			</p>
+			<div class="project-highlights">
+				<strong>What I Learned:</strong>
+				<ul>
+					<li>Service decomposition strategies and when to split vs. keep services together</li>
+					<li>Event-driven communication patterns and handling eventual consistency</li>
+					<li>Performance optimization techniques for high-throughput systems</li>
+					<li>The importance of observability and monitoring in distributed systems</li>
+				</ul>
+			</div>
+			<div class="project-tech">
+				<span class="tech-tag">Java</span>
+				<span class="tech-tag">Spring Boot</span>
+				<span class="tech-tag">PostgreSQL</span>
+				<span class="tech-tag">Docker</span>
+				<span class="tech-tag">Microservices</span>
+			</div>
+			<div class="project-links">
+				<span class="project-note">Proprietary - Details available upon request</span>
 			</div>
 		</div>
 
@@ -116,6 +147,32 @@
 		line-height: 1.6;
 		margin-bottom: 1rem;
 	}
+	
+	.project-highlights {
+		margin: 1rem 0;
+		padding: 1rem;
+		background: #f9fafb;
+		border-radius: 8px;
+		border-left: 3px solid var(--accent);
+	}
+	
+	.project-highlights strong {
+		color: var(--black);
+		display: block;
+		margin-bottom: 0.5rem;
+	}
+	
+	.project-highlights ul {
+		margin: 0.5rem 0 0 0;
+		padding-left: 1.5rem;
+	}
+	
+	.project-highlights li {
+		color: #6b7280;
+		font-size: 0.9rem;
+		line-height: 1.6;
+		margin-bottom: 0.25rem;
+	}
 
 	.project-tech {
 		display: flex;
@@ -142,11 +199,18 @@
 		text-decoration: none;
 		font-weight: 500;
 		transition: color 0.2s ease;
+		display: inline-block;
 	}
 
 	.project-link:hover {
 		color: #2563eb;
 		text-decoration: underline;
+	}
+	
+	.project-note {
+		color: #6b7280;
+		font-size: 0.9rem;
+		font-style: italic;
 	}
 
 	@media (max-width: 768px) {

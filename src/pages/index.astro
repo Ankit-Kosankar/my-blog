@@ -24,63 +24,85 @@ import "../styles/hero.css";
   }
 }
 		</script>
+		<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Ankit Kosankar",
+  "url": "{new URL('/', Astro.site)}",
+  "sameAs": [
+    "https://www.linkedin.com/in/ankit-kosankar/",
+    "https://medium.com/@kosankarankit",
+    "https://github.com/Ankit-Kosankar"
+  ],
+  "jobTitle": "Backend Engineer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Pozitive Energy"
+  },
+  "description": "Backend engineer writing about systems, architecture, and the thinking behind code. Deep dives into Java, Spring Boot, microservices, and building production systems."
+}
+		</script>
 	</head>
 	<body>
 		<Header />
 		<main>
 			<div class="hero-container">
 				<div class="hero-content">
-					<h1 class="hero-title"><i>🧑‍🚀 Hi, I am Ankit!</i></h1>
+					<h1 class="hero-title">I'm Ankit Kosankar</h1>
+					<p class="hero-subtitle">
+						Backend engineer who believes in understanding systems deeply, not just making things work.
+					</p>
 					<div class="hero-text">
 						<p>
-							I'm a software engineer with a curious mind and a passion for understanding how things work under the hood.
-							I love building clean, scalable systems and enjoy solving real-world problems with code.
-							Currently, I’m working at <!--<a href="https://pe.solutions/"> </a>-->Pozitive Energy,
-							where I focus mainly on <b>Backend development in Spring Boot </b> and occasionally work on 
-							designing robust user interfaces.
-							I've spent the last few years working on backend systems and some time on
-							frontend designing robust UI.
+							I write about the <strong>why</strong> behind the code — sharing what I learn from building production systems, 
+							exploring architecture decisions, and diving deep into how things actually work under the hood.
 						</p>
 						<p>
-							Over the past few years, I've spent my time designing
-							both microservices-based architectures and robust
-							monolithic systems — mostly for financial domains where
-							performance, consistency, and reliability matter most.
+							Currently working at Pozitive Energy, where I focus on <strong>backend development with Spring Boot</strong> 
+							and designing scalable microservices architectures. I've spent the last few years building systems for 
+							financial domains where performance, consistency, and reliability matter most.
 						</p>
 						<p>
-							What excites me is solving real-world problems with
-							elegant engineering — whether it's optimizing
-							inter-service communication, fine-tuning a PostgreSQL
-							query, or containerizing systems for smoother
-							deployment. I enjoy thinking in systems, not just
-							services.
+							What excites me is solving real-world problems with elegant engineering — whether it's optimizing 
+							inter-service communication, fine-tuning PostgreSQL queries, or thinking in systems, not just services.
 						</p>
-						
-						<p>
-							Beyond just code, I love sharing what I learn — be it through
-							writing, mentoring, or open discussion. I believe great software
-							comes from collaboration, curiosity, and craftsmanship.
-							<!-- Have fun! If you get stuck, remember to
-							<a href="https://docs.astro.build/">read the docs</a>
-							or <a href="https://astro.build/chat"
-								>join us on Discord</a
-							> to ask questions. -->
-						</p>
-						<!-- <p>
-							Looking for a blog template with a bit more personality?
-							Check out
-							<a href="https://github.com/Charca/astro-blog-template"
-								>astro-blog-template</a
-							>
-							by <a href="https://twitter.com/Charca">Maxi Ferreira</a
-							>.
-						</p> -->
+					</div>
+					<div class="hero-cta">
+						<a href="/blog" class="cta-button">Explore My Writing →</a>
+						<a href="/about" class="cta-link">Learn More About Me</a>
 					</div>
 				</div>
 				<div class="hero-image-container">
 					<div class="hero-image"></div>
 				</div>
 			</div>
+			
+			<section class="content-pillars">
+				<h2>What I Write About</h2>
+				<div class="pillars-grid">
+					<div class="pillar-card">
+						<div class="pillar-icon">⚙️</div>
+						<h3>Backend Engineering</h3>
+						<p>Deep dives into Java, Spring Boot, microservices, and building production systems.</p>
+					</div>
+					<div class="pillar-card">
+						<div class="pillar-icon">🏗️</div>
+						<h3>System Design</h3>
+						<p>Architecture decisions, design patterns, and the thinking behind scalable systems.</p>
+					</div>
+					<div class="pillar-card">
+						<div class="pillar-icon">📚</div>
+						<h3>Learning Logs</h3>
+						<p>Documenting experiments, learnings, and insights from building real-world applications.</p>
+					</div>
+					<div class="pillar-card">
+						<div class="pillar-icon">💭</div>
+						<h3>Opinions & Reflections</h3>
+						<p>Thoughts on engineering practices, industry trends, and the craft of software development.</p>
+					</div>
+				</div>
+			</section>
 			
 			<BlogPreview />
 		</main>

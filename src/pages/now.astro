@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Page.astro';
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+---
+
+<Layout
+	title="Now"
+	description="What I'm currently working on, learning, and thinking about"
+	heroImage={AboutHeroImage}
+>
+	<p>
+		This is my <a href="https://nownownow.com/about" target="_blank" rel="noopener">now page</a> — 
+		a snapshot of what I'm focused on right now. Inspired by Derek Sivers.
+	</p>
+
+	<section class="now-section">
+		<h2>Currently Working On</h2>
+		<ul>
+			<li>Building scalable microservices at Pozitive Energy</li>
+			<li>Deepening my understanding of distributed systems and event-driven architecture</li>
+			<li>Writing about backend engineering, system design, and the thinking behind code</li>
+			<li>Experimenting with new tools and patterns in my side projects</li>
+		</ul>
+	</section>
+
+	<section class="now-section">
+		<h2>Learning</h2>
+		<ul>
+			<li>Advanced Spring Boot patterns and best practices</li>
+			<li>Cloud infrastructure (AWS, GCP) and containerization</li>
+			<li>Performance optimization and observability in production systems</li>
+			<li>System design principles for high-scale applications</li>
+		</ul>
+	</section>
+
+	<section class="now-section">
+		<h2>Thinking About</h2>
+		<ul>
+			<li>How to balance speed of development with system reliability</li>
+			<li>The role of AI in software development and when to use it thoughtfully</li>
+			<li>What makes a good technical blog post — depth vs. accessibility</li>
+			<li>Building systems that are maintainable, not just functional</li>
+		</ul>
+	</section>
+
+	<section class="now-section">
+		<h2>Reading</h2>
+		<ul>
+			<li>Technical blogs and documentation (always)</li>
+			<li>System design case studies and architecture patterns</li>
+			<li>Occasionally: books on software engineering and systems thinking</li>
+		</ul>
+	</section>
+
+	<p class="last-updated">
+		<em>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</em>
+	</p>
+</Layout>
+
+<style>
+	.now-section {
+		margin-bottom: 2.5rem;
+		padding-left: 1rem;
+		border-left: 4px solid var(--accent);
+	}
+	
+	.now-section h2 {
+		margin-bottom: 1rem;
+		color: var(--black);
+	}
+	
+	.now-section ul {
+		margin: 0;
+		padding-left: 1.5rem;
+	}
+	
+	.now-section li {
+		margin-bottom: 0.75rem;
+		color: var(--gray-dark);
+		line-height: 1.6;
+	}
+	
+	.last-updated {
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--gray-light);
+		color: var(--gray);
+		font-size: 0.9rem;
+	}
+</style>

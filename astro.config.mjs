@@ -9,7 +9,7 @@ import remarkGfm from 'remark-gfm';
 
 // https://astro.build/config
 export default defineConfig({
-	site: process.env.SITE || 'https://example.com',
+	site: process.env.SITE || 'https://ankitkosankar.com',
 	output: 'server',
 	adapter: netlify({}),
 	integrations: [

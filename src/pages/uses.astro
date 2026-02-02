@@ -1,0 +1,116 @@
+---
+import Layout from '../layouts/Page.astro';
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+---
+
+<Layout
+	title="Uses"
+	description="Tools, tech stack, and setup I use for development and writing"
+	heroImage={AboutHeroImage}
+>
+	<p>
+		Inspired by <a href="https://uses.tech" target="_blank" rel="noopener">uses.tech</a>, 
+		here's what I use to build software and write content.
+	</p>
+
+	<section class="uses-section">
+		<h2>Development</h2>
+		<div class="uses-category">
+			<h3>Languages & Frameworks</h3>
+			<ul>
+				<li><strong>Java</strong> — Primary language for backend development</li>
+				<li><strong>Spring Boot</strong> — Framework of choice for building REST APIs</li>
+				<li><strong>TypeScript/JavaScript</strong> — For frontend work and tooling</li>
+				<li><strong>SQL</strong> — PostgreSQL, MySQL for data persistence</li>
+			</ul>
+		</div>
+		
+		<div class="uses-category">
+			<h3>Tools & Infrastructure</h3>
+			<ul>
+				<li><strong>Docker</strong> — Containerization for local development and deployment</li>
+				<li><strong>Git</strong> — Version control (GitHub for hosting)</li>
+				<li><strong>IntelliJ IDEA</strong> — Primary IDE for Java development</li>
+				<li><strong>VS Code</strong> — For Markdown editing and frontend work</li>
+				<li><strong>Postman</strong> — API testing and development</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="uses-section">
+		<h2>Writing & Content</h2>
+		<div class="uses-category">
+			<h3>Editor & Tools</h3>
+			<ul>
+				<li><strong>VS Code</strong> — Markdown editing with extensions</li>
+				<li><strong>Markdown</strong> — Format for all blog posts</li>
+				<li><strong>Astro</strong> — Static site generator for this site</li>
+				<li><strong>Netlify CMS</strong> — Content management interface</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="uses-section">
+		<h2>Hardware</h2>
+		<ul>
+			<li>MacBook Pro — Primary development machine</li>
+			<li>External monitor — For better screen real estate</li>
+			<li>Mechanical keyboard — For comfortable typing</li>
+		</ul>
+	</section>
+
+	<section class="uses-section">
+		<h2>Productivity</h2>
+		<ul>
+			<li><strong>Notion</strong> — Note-taking and project planning</li>
+			<li><strong>GitHub</strong> — Code hosting and collaboration</li>
+			<li><strong>Terminal</strong> — Command line for most tasks</li>
+		</ul>
+	</section>
+
+	<p class="last-updated">
+		<em>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</em>
+	</p>
+</Layout>
+
+<style>
+	.uses-section {
+		margin-bottom: 2.5rem;
+		padding-left: 1rem;
+		border-left: 4px solid var(--accent);
+	}
+	
+	.uses-section h2 {
+		margin-bottom: 1.5rem;
+		color: var(--black);
+	}
+	
+	.uses-category {
+		margin-bottom: 1.5rem;
+	}
+	
+	.uses-category h3 {
+		margin-bottom: 0.75rem;
+		color: var(--gray-dark);
+		font-size: 1.1rem;
+	}
+	
+	.uses-section ul {
+		margin: 0;
+		padding-left: 1.5rem;
+	}
+	
+	.uses-section li {
+		margin-bottom: 0.75rem;
+		color: var(--gray-dark);
+		line-height: 1.6;
+	}
+	
+	.last-updated {
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--gray-light);
+		color: var(--gray);
+		font-size: 0.9rem;
+	}
+</style>

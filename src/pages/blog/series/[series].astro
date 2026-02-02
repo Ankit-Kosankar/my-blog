@@ -1,0 +1,200 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { SITE_TITLE } from '../../../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import { parseISO, parse } from 'date-fns';
+
+const seriesSlug = Astro.params.series || '';
+const decodedSeries = decodeURIComponent(seriesSlug.replace(/-/g, ' '));
+
+// Get all blog posts
+const allPosts = await getCollection('blog');
+
+// Find the series name by matching slug
+let seriesName = '';
+const seriesPosts = allPosts
+	.filter(post => {
+		if (!post.data.series) return false;
+		const postSeriesSlug = post.data.series.toLowerCase().replace(/\s+/g, '-');
+		if (postSeriesSlug === seriesSlug.toLowerCase()) {
+			if (!seriesName) seriesName = post.data.series;
+			return true;
+		}
+		return false;
+	})
+	.sort((a, b) => {
+		const partA = a.data.seriesPart || 0;
+		const partB = b.data.seriesPart || 0;
+		return partA - partB;
+	});
+
+function parseBlogDate(dateStr: string | Date) {
+	if (dateStr instanceof Date) return dateStr;
+	if (typeof dateStr !== 'string') return new Date();
+	const isoDate = parseISO(dateStr);
+	if (isoDate instanceof Date && !isNaN(isoDate.valueOf())) {
+		return isoDate;
+	}
+	const customDate = parse(dateStr, 'MMM dd yyyy', new Date());
+	if (customDate instanceof Date && !isNaN(customDate.valueOf())) {
+		return customDate;
+	}
+	return new Date();
+}
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead 
+			title={`${seriesName || decodedSeries} Series - ${SITE_TITLE}`} 
+			description={`Complete series: ${seriesName || decodedSeries}`} 
+		/>
+		<style>
+			main {
+				width: 960px;
+			}
+			
+			.hero-section {
+				margin-bottom: 3rem;
+				padding: 2rem 0;
+			}
+			
+			.hero-section h1 {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+				color: var(--black);
+			}
+			
+			.hero-section p {
+				font-size: 1.1rem;
+				color: var(--gray-dark);
+				line-height: 1.6;
+			}
+			
+			.series-posts {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				counter-reset: series-counter;
+			}
+			
+			.series-post {
+				counter-increment: series-counter;
+				background: white;
+				border: 1px solid var(--gray-light);
+				border-radius: 12px;
+				padding: 1.5rem;
+				margin-bottom: 1.5rem;
+				transition: all 0.2s ease;
+				position: relative;
+				padding-left: 4rem;
+			}
+			
+			.series-post::before {
+				content: counter(series-counter);
+				position: absolute;
+				left: 1.5rem;
+				top: 1.5rem;
+				width: 2rem;
+				height: 2rem;
+				background: var(--accent);
+				color: white;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				font-size: 0.9rem;
+			}
+			
+			.series-post:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+				border-color: var(--accent);
+			}
+			
+			.series-post a {
+				text-decoration: none;
+				color: inherit;
+				display: block;
+			}
+			
+			.post-title {
+				font-size: 1.25rem;
+				font-weight: 600;
+				color: var(--black);
+				margin-bottom: 0.5rem;
+			}
+			
+			.post-description {
+				color: var(--gray-dark);
+				margin-bottom: 0.75rem;
+				line-height: 1.6;
+			}
+			
+			.post-meta {
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+				font-size: 0.9rem;
+				color: var(--gray);
+			}
+			
+			.empty-state {
+				text-align: center;
+				padding: 3rem;
+				color: var(--gray-dark);
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="hero-section">
+				<h1>{seriesName || decodedSeries}</h1>
+				<p>
+					{seriesPosts.length} {seriesPosts.length === 1 ? 'post' : 'posts'} in this series
+				</p>
+			</div>
+			
+			{seriesPosts.length > 0 ? (
+				<ol class="series-posts">
+					{
+						seriesPosts.map((post) => {
+							const link = `/blog/${post.id.replace(/\.mdx?$/, '')}/`;
+							const part = post.data.seriesPart || 0;
+							return (
+								<li class="series-post">
+									<a href={link}>
+										<h2 class="post-title">
+											{part > 0 && `Part ${part}: `}{post.data.title}
+										</h2>
+										<p class="post-description">{post.data.description}</p>
+										<div class="post-meta">
+											<time>
+												<FormattedDate date={parseBlogDate(post.data.pubDate)} />
+											</time>
+											{post.data.type && (
+												<span>• {post.data.type}</span>
+											)}
+										</div>
+									</a>
+								</li>
+							);
+						})
+					}
+				</ol>
+			) : (
+				<div class="empty-state">
+					<p>No posts found in this series.</p>
+					<p><a href="/blog">← Back to all posts</a></p>
+				</div>
+			)}
+		</main>
+		<Footer />
+	</body>
+</html>

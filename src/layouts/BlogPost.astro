@@ -8,7 +8,9 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { parseISO, parse } from 'date-fns';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	readingTime?: number;
+};
 
 function parseBlogDate(dateStr: string | Date) {
 	if (dateStr instanceof Date) return dateStr;
@@ -28,26 +30,70 @@ function parseBlogDate(dateStr: string | Date) {
 	return new Date();
 }
 
-const { title, description, pubDate, updatedDate, heroImage, tags = [], author } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags = [], author, readingTime, series, seriesPart } = Astro.props;
 const parsedPubDate = parseBlogDate(pubDate);
 const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 
-// Related posts by tag overlap (exclude current)
-let related = [] as Array<{ id: string; data: any }>;
-try {
-  const all = await getCollection('blog');
-  const currentId = Astro.params?.slug as string | undefined;
-  if (Array.isArray(tags) && tags.length > 0) {
-    related = all
-      .filter(p => p.id !== currentId)
+// Series navigation
+let seriesPosts: Array<{ id: string; data: any; part: number }> = [];
+if (series) {
+  try {
+    const all = await getCollection('blog');
+    seriesPosts = all
+      .filter(p => p.data.series === series && !p.data.draft)
       .map(p => ({
         id: p.id,
         data: p.data,
-        score: (p.data.tags || []).filter((t: string) => tags.includes(t)).length,
+        part: p.data.seriesPart || 0,
       }))
+      .sort((a, b) => a.part - b.part);
+  } catch {}
+}
+
+// Related posts with improved algorithm (tags, category, type)
+let related = [] as Array<{ id: string; data: any; score: number }>;
+try {
+  const all = await getCollection('blog');
+  const currentId = Astro.params?.slug as string | undefined;
+  const currentPost = all.find(p => p.id === currentId);
+  
+  if (currentPost) {
+    related = all
+      .filter(p => {
+        // Exclude current post, drafts, and other posts in the same series
+        if (p.id === currentId || p.data.draft) return false;
+        if (series && p.data.series === series) return false;
+        return true;
+      })
+      .map(p => {
+        let score = 0;
+        // Tag overlap (weight: 3 points per tag)
+        const postTags = p.data.tags || [];
+        const currentTags = tags || [];
+        const tagMatches = postTags.filter((t: string) => currentTags.includes(t)).length;
+        score += tagMatches * 3;
+        
+        // Category match (weight: 5 points)
+        if (p.data.category && currentPost.data.category && 
+            p.data.category.toLowerCase() === currentPost.data.category.toLowerCase()) {
+          score += 5;
+        }
+        
+        // Type match (weight: 2 points)
+        if (p.data.type && currentPost.data.type && 
+            p.data.type === currentPost.data.type) {
+          score += 2;
+        }
+        
+        return {
+          id: p.id,
+          data: p.data,
+          score,
+        };
+      })
       .filter(p => p.score > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
+      .slice(0, 5);
   }
 } catch {}
 ---
@@ -123,9 +169,19 @@ try {
 			.date {
 				margin-bottom: 0.5em;
 				color: var(--gray);
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+			}
+			.reading-time {
+				color: var(--gray);
+				font-size: 0.9em;
 			}
 			.last-updated-on {
 				font-style: italic;
+				width: 100%;
+				margin-top: 0.25em;
 			}
 			
 			.prose p {
@@ -133,6 +189,139 @@ try {
 				line-height: 1.7;
 				margin-bottom: 1.5rem;
 				color: var(--gray-dark);
+			}
+			
+			.series-badge {
+				margin-bottom: 1rem;
+			}
+			
+			.series-link {
+				display: inline-block;
+				padding: 0.5rem 1rem;
+				background: var(--gray-light);
+				color: var(--accent);
+				text-decoration: none;
+				border-radius: 20px;
+				font-size: 0.9rem;
+				font-weight: 500;
+				transition: all 0.2s ease;
+			}
+			
+			.series-link:hover {
+				background: var(--accent);
+				color: white;
+			}
+			
+			.series-navigation {
+				background: #f9fafb;
+				border-left: 4px solid var(--accent);
+				padding: 1.5rem;
+				margin: 2rem 0;
+				border-radius: 8px;
+			}
+			
+			.series-navigation h3 {
+				margin: 0 0 1rem 0;
+				font-size: 1.1rem;
+				color: var(--black);
+			}
+			
+			.series-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			
+			.series-list li {
+				margin-bottom: 0.5rem;
+			}
+			
+			.series-item,
+			.series-item-current {
+				display: block;
+				padding: 0.5rem;
+				border-radius: 4px;
+				transition: background 0.2s ease;
+			}
+			
+			.series-item {
+				color: var(--gray-dark);
+				text-decoration: none;
+			}
+			
+			.series-item:hover {
+				background: white;
+				color: var(--accent);
+			}
+			
+			.series-item-current {
+				background: var(--accent);
+				color: white;
+				font-weight: 600;
+			}
+			
+			.post-tags-section {
+				margin-top: 3rem;
+				padding-top: 2rem;
+				border-top: 1px solid var(--gray-light);
+			}
+			
+			.tags-list {
+				display: flex;
+				gap: 0.75rem;
+				flex-wrap: wrap;
+			}
+			
+			.tag-link {
+				background: var(--gray-light);
+				color: var(--gray-dark);
+				padding: 0.5rem 1rem;
+				border-radius: 20px;
+				text-decoration: none;
+				font-size: 0.9rem;
+				transition: all 0.2s ease;
+			}
+			
+			.tag-link:hover {
+				background: var(--accent);
+				color: white;
+			}
+			
+			.related-posts,
+			.further-reading {
+				margin-top: 3rem;
+				padding-top: 2rem;
+				border-top: 1px solid var(--gray-light);
+			}
+			
+			.related-posts-list,
+			.further-reading-list {
+				list-style: none;
+				padding: 0;
+			}
+			
+			.related-posts-list li,
+			.further-reading-list li {
+				margin-bottom: 1rem;
+			}
+			
+			.related-posts-list a,
+			.further-reading-list a {
+				font-weight: 600;
+				color: var(--accent);
+				text-decoration: none;
+			}
+			
+			.related-posts-list a:hover,
+			.further-reading-list a:hover {
+				text-decoration: underline;
+			}
+			
+			.related-post-description {
+				font-size: 0.9rem;
+				color: var(--gray);
+				margin-top: 0.25rem;
+				margin-bottom: 0.5rem;
 			}
 			
 			@media (max-width: 720px) {
@@ -161,6 +350,9 @@ try {
 								<time class="blog-preview-date">
 									<FormattedDate date={parsedPubDate} />
 								</time>
+								{readingTime && (
+									<span class="reading-time"> • {readingTime} min read</span>
+								)}
 								{
 									parsedUpdatedDate && (
 										<div class="last-updated-on">
@@ -171,23 +363,94 @@ try {
 									)
 								}
 							</div>
+							{series && (
+								<div class="series-badge">
+									<a href={`/blog/series/${encodeURIComponent(series.toLowerCase().replace(/\s+/g, '-'))}/`} class="series-link">
+										{series} {seriesPart && `— Part ${seriesPart}`}
+									</a>
+								</div>
+							)}
 							<h1>{title}</h1>
 							<hr />
 						</div>
+						
+						{/* Series Navigation */}
+						{seriesPosts.length > 1 && (
+							<nav class="series-navigation" aria-label="Series navigation">
+								<h3>Series: {series}</h3>
+								<ol class="series-list">
+									{seriesPosts.map((p) => {
+										const isCurrent = p.id === Astro.params?.slug;
+										const link = `/blog/${p.id}/`;
+										return (
+											<li class={isCurrent ? 'current' : ''}>
+												{isCurrent ? (
+													<span class="series-item-current">
+														Part {p.part}: {p.data.title}
+													</span>
+												) : (
+													<a href={link} class="series-item">
+														Part {p.part}: {p.data.title}
+													</a>
+												)}
+											</li>
+										);
+									})}
+								</ol>
+							</nav>
+						)}
+						
 						<slot />
 					</div>
+						{/* Tags Section */}
+						{tags.length > 0 && (
+							<section class="prose post-tags-section" aria-label="Post tags">
+								<div class="tags-list">
+									{tags.map((tag: string) => (
+										<a href={`/blog/tag/${encodeURIComponent(tag)}/`} class="tag-link">
+											#{tag}
+										</a>
+									))}
+								</div>
+							</section>
+						)}
+						
+						{/* Related Posts */}
 						{related.length > 0 && (
-							<section class="prose" aria-label="Related posts">
-								<h2>Related posts</h2>
-								<ul>
+							<section class="prose related-posts" aria-label="Related posts">
+								<h2>Related Posts</h2>
+								<ul class="related-posts-list">
 									{related.map((p) => (
 										<li>
 											<a href={`/blog/${p.id}/`}>{p.data.title}</a>
+											{p.data.description && (
+												<p class="related-post-description">{p.data.description}</p>
+											)}
 										</li>
 									))}
 								</ul>
 							</section>
 						)}
+						
+						{/* Further Reading Section */}
+						<section class="prose further-reading" aria-label="Further reading">
+							<h2>Further Reading</h2>
+							<ul class="further-reading-list">
+								{category && (
+									<li>
+										<a href={`/blog/category/${encodeURIComponent(category.toLowerCase().replace(/\s+/g, '-'))}/`}>
+											More posts in {category}
+										</a>
+									</li>
+								)}
+								<li>
+									<a href="/blog/tags">Browse all tags</a>
+								</li>
+								<li>
+									<a href="/blog">View all posts</a>
+								</li>
+							</ul>
+						</section>
 				</article>
 			</main>
 			<Footer />

@@ -24,6 +24,12 @@ const blog = defineCollection({
 			url: z.string().url().optional(),
 			avatar: image().optional().nullable(),
 		}).optional(),
+		// Content taxonomy fields
+		type: z.enum(['essay', 'note', 'opinion', 'tutorial', 'log']).optional(),
+		category: z.string().optional(),
+		series: z.string().optional(),
+		seriesPart: z.number().optional(),
+		difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
 	}),
 });
 

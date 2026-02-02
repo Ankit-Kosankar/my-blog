@@ -34,16 +34,53 @@ function parseBlogDate(dateStr: string | Date) {
 const allLocalPosts = await getCollection('blog');
 console.log('🔍 Debug: Found', allLocalPosts.length, 'local posts');
 
-const localPosts = allLocalPosts.map(post => {
-  const link = `/blog/${post.id.replace(/\.mdx?$/, '')}/`;
-  console.log('🔗 Debug: Post', post.data.title, '->', link);
-  return {
-    title: post.data.title,
-    link: link,
-    pubDate: parseBlogDate(post.data.pubDate),
-    source: 'local',
-  };
+// Extract unique categories
+const categoryCounts = new Map<string, number>();
+allLocalPosts.forEach(post => {
+	const category = post.data.category;
+	if (category) {
+		categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+	}
 });
+const sortedCategories = Array.from(categoryCounts.entries())
+	.sort((a, b) => b[1] - a[1]);
+
+// Get filter from URL
+const categoryFilter = Astro.url.searchParams.get('category') || '';
+
+const localPosts = allLocalPosts
+	.filter(post => {
+		if (!categoryFilter) return true;
+		return post.data.category?.toLowerCase() === categoryFilter.toLowerCase();
+	})
+	.map(post => {
+		const link = `/blog/${post.id.replace(/\.mdx?$/, '')}/`;
+		console.log('🔗 Debug: Post', post.data.title, '->', link);
+		return {
+			id: post.id,
+			title: post.data.title,
+			description: post.data.description,
+			link: link,
+			pubDate: parseBlogDate(post.data.pubDate),
+			source: 'local',
+			category: post.data.category,
+			type: post.data.type,
+			tags: post.data.tags || [],
+		};
+	});
+
+// Prepare search data for client-side search
+const searchData = JSON.stringify(
+	allLocalPosts.map(post => ({
+		id: post.id,
+		title: post.data.title,
+		description: post.data.description,
+		tags: post.data.tags || [],
+		category: post.data.category || '',
+		type: post.data.type || '',
+		link: `/blog/${post.id.replace(/\.mdx?$/, '')}/`,
+	}))
+);
 
 // Fetch Medium posts
 const mediumPosts = await getMediumPosts(5);
@@ -99,6 +136,71 @@ type BlogPost = {
 				font-size: 1rem;
 				margin: 1rem 0 0 0;
 				opacity: 0.9;
+			}
+			
+			.search-section {
+				margin-bottom: 2rem;
+			}
+			
+			.search-box {
+				width: 100%;
+				padding: 1rem;
+				font-size: 1rem;
+				border: 2px solid var(--gray-light);
+				border-radius: 8px;
+				transition: border-color 0.2s ease;
+			}
+			
+			.search-box:focus {
+				outline: none;
+				border-color: var(--accent);
+			}
+			
+			.search-results-info {
+				margin-top: 1rem;
+				color: var(--gray);
+				font-size: 0.9rem;
+			}
+			
+			.filters {
+				display: flex;
+				gap: 1rem;
+				margin-bottom: 2rem;
+				flex-wrap: wrap;
+				align-items: center;
+			}
+			
+			.filter-label {
+				font-weight: 600;
+				color: var(--gray-dark);
+			}
+			
+			.filter-buttons {
+				display: flex;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+			}
+			
+			.filter-button {
+				padding: 0.5rem 1rem;
+				background: white;
+				border: 1px solid var(--gray-light);
+				border-radius: 20px;
+				text-decoration: none;
+				color: var(--gray-dark);
+				font-size: 0.9rem;
+				transition: all 0.2s ease;
+			}
+			
+			.filter-button:hover {
+				background: var(--gray-light);
+				border-color: var(--accent);
+			}
+			
+			.filter-button.active {
+				background: var(--accent);
+				color: white;
+				border-color: var(--accent);
 			}
 			
 			.stats {
@@ -260,27 +362,50 @@ type BlogPost = {
 				<h1>📚 My Dev Notebook</h1>
 				<p>Here, I share what I learn — one topic at a time.
 				   Each post reflects my understanding, experiences, and takeaways as I explore new ideas and challenges</p>
-				<!-- <div class="stats">
-					<div class="stat-item">
-						<span class="stat-number">{allPosts.length}</span>
-						<span class="stat-label">Tutorials</span>
-					</div>
-					<div class="stat-item">
-						<span class="stat-number">{localPosts.length}</span>
-						<span class="stat-label">Study Notes</span>
-					</div>
-					<div class="stat-item">
-						<span class="stat-number">{mediumPosts.length}</span>
-						<span class="stat-label">Published Tips</span>
-					</div>
-				</div> -->
 			</div>
+			
+			<!-- Search Section -->
+			<div class="search-section">
+				<input 
+					type="search" 
+					id="blog-search" 
+					class="search-box" 
+					placeholder="Search posts by title, description, tags, or category..."
+					autocomplete="off"
+				/>
+				<div id="search-results-info" class="search-results-info" style="display: none;"></div>
+			</div>
+			
+			{/* Category Filters */}
+			{sortedCategories.length > 0 && (
+				<div class="filters">
+					<span class="filter-label">Filter by category:</span>
+					<div class="filter-buttons">
+						<a 
+							href="/blog" 
+							class={`filter-button ${!categoryFilter ? 'active' : ''}`}
+						>
+							All ({allLocalPosts.length})
+						</a>
+						{
+							sortedCategories.map(([category, count]) => (
+								<a 
+									href={`/blog?category=${encodeURIComponent(category)}`}
+									class={`filter-button ${categoryFilter.toLowerCase() === category.toLowerCase() ? 'active' : ''}`}
+								>
+									{category} ({count})
+								</a>
+							))
+						}
+					</div>
+				</div>
+			)}
 
 			<section>
-				<ul>
+				<ul id="posts-list">
 					{
 					paginatedPosts.map((post: BlogPost) => (
-							<li>
+							<li class="post-item" data-post-id={post.link}>
 								<a href={post.link} target={post.source === 'medium' ? "_blank" : "_self"}>
 									<h4 class="title">{post.title}</h4>
 									<time class="blog-preview-date">
@@ -308,5 +433,74 @@ type BlogPost = {
 			</section>
 		</main>
 		<Footer />
+		
+		<script is:inline define:vars={{ searchData }}>
+			(function() {
+				// Load Fuse.js from CDN
+				const script = document.createElement('script');
+				script.src = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js';
+				script.onload = function() {
+					const searchInput = document.getElementById('blog-search');
+					const postsList = document.getElementById('posts-list');
+					const searchResultsInfo = document.getElementById('search-results-info');
+					const originalPosts = Array.from(postsList?.children || []);
+					
+					if (!searchInput || !postsList || !searchResultsInfo) return;
+					
+					// Initialize Fuse.js
+					const fuse = new Fuse(searchData, {
+						keys: ['title', 'description', 'tags', 'category', 'type'],
+						threshold: 0.3,
+						includeScore: true,
+					});
+					
+					// Search function
+					function performSearch(query) {
+						if (!query.trim()) {
+							// Show all posts
+							postsList.innerHTML = '';
+							originalPosts.forEach(post => postsList.appendChild(post.cloneNode(true)));
+							searchResultsInfo.style.display = 'none';
+							return;
+						}
+						
+						const results = fuse.search(query);
+						
+						postsList.innerHTML = '';
+						
+						if (results.length === 0) {
+							postsList.innerHTML = '<li style="padding: 2rem; text-align: center; color: var(--gray);">No posts found matching your search.</li>';
+							searchResultsInfo.textContent = `No results for "${query}"`;
+							searchResultsInfo.style.display = 'block';
+						} else {
+							results.forEach(result => {
+								const post = result.item;
+								const li = document.createElement('li');
+								li.className = 'post-item';
+								const date = new Date(post.pubDate);
+								li.innerHTML = `
+									<a href="${post.link}">
+										<h4 class="title">${post.title}</h4>
+										<time class="blog-preview-date">${date.toLocaleDateString()}</time>
+									</a>
+								`;
+								postsList.appendChild(li);
+							});
+							searchResultsInfo.textContent = `Found ${results.length} ${results.length === 1 ? 'post' : 'posts'} for "${query}"`;
+							searchResultsInfo.style.display = 'block';
+						}
+					}
+					
+					// Debounce search
+					let searchTimeout;
+					searchInput.addEventListener('input', (e) => {
+						clearTimeout(searchTimeout);
+						const query = e.target.value;
+						searchTimeout = setTimeout(() => performSearch(query), 300);
+					});
+				};
+				document.head.appendChild(script);
+			})();
+		</script>
 	</body>
 </html>
