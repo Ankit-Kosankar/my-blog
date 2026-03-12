@@ -23,10 +23,18 @@ const { title, description, heroImage } = Astro.props;
 			}
 
 			main {
-				width: 80%;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 3em 1em;
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2.5rem 1.5rem;
+				box-sizing: border-box;
+			}
+			
+			.content-wrapper {
+				max-width: 100%;
+				margin: 0 auto;
+				padding: 0;
+				box-sizing: border-box;
 			}
 			
 			.page-content {
@@ -63,8 +71,8 @@ const { title, description, heroImage } = Astro.props;
 			}
 			
 			.content-section p {
-				font-size: 1.1rem;
-				line-height: 1.7;
+				font-size: 1.05rem;
+				line-height: 1.75;
 				margin-bottom: 1.5rem;
 				color: var(--gray-dark);
 			}
@@ -84,15 +92,65 @@ const { title, description, heroImage } = Astro.props;
 			@media (max-width: 720px) {
 				main {
 					width: 100%;
-					padding: 1em;
+					padding: 1.5rem 1rem;
+					box-sizing: border-box;
+				}
+				
+				.page-content {
+					padding: 0.75em;
+				}
+				
+				.page-title {
+					padding: 0.75em 0;
+					margin-bottom: 0.75em;
 				}
 				
 				.page-title h1 {
-					font-size: 2rem;
+					font-size: 1.5rem;
 				}
 				
 				.page-description {
-					font-size: 1rem;
+					font-size: 0.9rem;
+					margin-bottom: 1.5rem;
+				}
+				
+				.content-section {
+					margin-bottom: 1.5rem;
+				}
+				
+				.content-section p {
+					font-size: 0.95rem;
+					line-height: 1.6;
+					margin-bottom: 1rem;
+				}
+				
+				.hero-image {
+					margin-bottom: 1.5rem;
+				}
+			}
+			
+			@media (max-width: 480px) {
+				main {
+					padding: 1.25rem 0.875rem;
+					box-sizing: border-box;
+				}
+				
+				.page-content {
+					padding: 0.5em;
+				}
+				
+				.page-title h1 {
+					font-size: 1.35rem;
+				}
+				
+				.page-description {
+					font-size: 0.85rem;
+					margin-bottom: 1.25rem;
+				}
+				
+				.content-section p {
+					font-size: 0.9rem;
+					margin-bottom: 0.875rem;
 				}
 			}
 		</style>

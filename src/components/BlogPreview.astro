@@ -11,17 +11,26 @@ const recentPosts = allPosts.slice(0, 3);
 ---
 
 <section class="blog-preview">
-	<h2>Latest Blog Posts</h2>
+	<h2>Latest Writing</h2>
+	<p>Recent thoughts, learnings, and deep dives</p>
 	<ul>
 		{
 			recentPosts.map((post) => (
 				<li class="blog-preview-item">
 					<a href={`/blog/${post.id}/`} class="blog-preview-link">
+						{post.data.category && (
+							<span style="display: inline-block; padding: 0.4rem 0.9rem; background: linear-gradient(135deg, rgba(35, 55, 255, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 1rem;">
+								{post.data.category}
+							</span>
+						)}
 						<h3 class="blog-preview-title">{post.data.title}</h3>
 						<p class="blog-preview-description">{post.data.description}</p>
-						<time class="blog-preview-date">
-							<FormattedDate date={post.data.pubDate} />
-						</time>
+						<div class="blog-preview-footer">
+							<time class="blog-preview-date">
+								<FormattedDate date={post.data.pubDate} />
+							</time>
+							<span class="blog-preview-read-more">Read →</span>
+						</div>
 					</a>
 				</li>
 			))

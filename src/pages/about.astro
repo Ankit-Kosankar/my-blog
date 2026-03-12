@@ -151,9 +151,9 @@ import WorksWith from '../components/WorksWith.astro';
 
 <style>
 	.about-section {
-  margin-bottom: 2rem;
-  padding-left: 1rem;
-  border-left: 4px solid #3b82f6; /* Tailwind blue-500 */
+  margin-bottom: 1.5rem;
+  padding-left: 0.875rem;
+  border-left: 3px solid #3b82f6;
   border-radius: 8px;
   background-color: #f9fafb;
   padding: 1rem;
@@ -166,8 +166,8 @@ import WorksWith from '../components/WorksWith.astro';
 }
 
 .section-marker {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   background-color: #3b82f6;
   border-radius: 50%;
   margin-right: 0.5rem;
@@ -175,7 +175,74 @@ import WorksWith from '../components/WorksWith.astro';
 
 h3 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
+}
+
+.about-intro p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.about-section p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 0.875rem;
+}
+
+.about-section ul {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.about-section li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 720px) {
+  .about-section {
+    margin-bottom: 1.25rem;
+    padding: 0.875rem;
+    padding-left: 0.75rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+  }
+  
+  .about-intro p {
+    font-size: 0.95rem;
+  }
+  
+  .about-section p {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .about-section li {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 0.75rem;
+    padding-left: 0.625rem;
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    font-size: 0.95rem;
+  }
+  
+  .about-section p {
+    font-size: 0.85rem;
+  }
+  
+  .about-section li {
+    font-size: 0.8rem;
+  }
 }
 
 </style>

@@ -37,20 +37,41 @@ body {
 	padding: 0;
 	padding-top: 80px; /* Add padding for fixed header */
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
+	background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+	background-attachment: fixed;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: var(--gray-dark);
-	font-size: 1em;
-	line-height: 1.5;
+	font-size: 0.95em;
+	line-height: 1.6;
+	min-height: 100vh;
+	overflow-x: hidden;
 }
+
 main {
-	/* width: 720px; */
-	width: 80%;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2.5rem 1.5rem;
+	box-sizing: border-box;
+}
+
+/* Content container for visible separation */
+.content-wrapper {
+	max-width: 100%;
+	margin: 0 auto;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+/* Ensure no horizontal overflow */
+* {
+	box-sizing: border-box;
+}
+
+html {
+	overflow-x: hidden;
+	width: 100%;
 }
 h1,
 h2,
@@ -63,19 +84,19 @@ h6 {
 	line-height: 1.2;
 }
 h1 {
-	font-size: 3.052em;
+	font-size: 2.75em;
 }
 h2 {
-	font-size: 2.441em;
+	font-size: 2.2em;
 }
 h3 {
-	font-size: 1.953em;
+	font-size: 1.75em;
 }
 h4 {
-	font-size: 1.563em;
+	font-size: 1.4em;
 }
 h5 {
-	font-size: 1.25em;
+	font-size: 1.15em;
 }
 strong,
 b {
@@ -89,9 +110,12 @@ a:hover {
 }
 p {
 	margin-bottom: 1em;
+	font-size: 0.95em;
+	line-height: 1.7;
 }
 .prose p {
-	margin-bottom: 2em;
+	margin-bottom: 1.75em;
+	font-size: 1em;
 }
 textarea {
 	width: 100%;
@@ -132,11 +156,74 @@ hr {
 }
 @media (max-width: 720px) {
 	body {
-		font-size: 18px;
-		padding-top: 70px; /* Slightly less padding on mobile */
+		font-size: 15px;
+		padding-top: 60px;
 	}
 	main {
-		padding: 1em;
+		padding: 1.5rem 1rem;
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+	
+	.content-wrapper {
+		padding: 0;
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	h1 {
+		font-size: 1.85rem;
+	}
+	
+	h2 {
+		font-size: 1.4rem;
+	}
+	
+	h3 {
+		font-size: 1.15rem;
+	}
+	
+	h4 {
+		font-size: 1.05rem;
+	}
+	
+	p {
+		margin-bottom: 0.875rem;
+		font-size: 0.9rem;
+		line-height: 1.6;
+	}
+}
+
+@media (max-width: 480px) {
+	body {
+		font-size: 14px;
+	}
+	
+	main {
+		padding: 1.25rem 0.875rem;
+	}
+	
+	.content-wrapper {
+		padding: 0;
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	h1 {
+		font-size: 1.65rem;
+	}
+	
+	h2 {
+		font-size: 1.25rem;
+	}
+	
+	h3 {
+		font-size: 1.05rem;
+	}
+	
+	p {
+		font-size: 0.875rem;
 	}
 }
 

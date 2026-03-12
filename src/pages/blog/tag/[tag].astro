@@ -45,7 +45,18 @@ function parseBlogDate(dateStr: string | Date) {
 		/>
 		<style>
 			main {
-				width: 960px;
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2.5rem 1.5rem;
+				box-sizing: border-box;
+			}
+			
+			.content-wrapper {
+				max-width: 100%;
+				margin: 0 auto;
+				padding: 0;
+				box-sizing: border-box;
 			}
 			
 			.hero-section {
@@ -123,14 +134,15 @@ function parseBlogDate(dateStr: string | Date) {
 	<body>
 		<Header />
 		<main>
-			<div class="hero-section">
-				<h1>#{decodedTag}</h1>
-				<p>
-					{tagPosts.length} {tagPosts.length === 1 ? 'post' : 'posts'} tagged with this topic
-				</p>
-			</div>
-			
-			{tagPosts.length > 0 ? (
+			<div class="content-wrapper">
+				<div class="hero-section">
+					<h1>#{decodedTag}</h1>
+					<p>
+						{tagPosts.length} {tagPosts.length === 1 ? 'post' : 'posts'} tagged with this topic
+					</p>
+				</div>
+				
+				{tagPosts.length > 0 ? (
 				<ul class="posts-list">
 					{
 						tagPosts.map((post) => {
@@ -163,6 +175,7 @@ function parseBlogDate(dateStr: string | Date) {
 					<p><a href="/blog/tags">← Browse all tags</a></p>
 				</div>
 			)}
+			</div>
 		</main>
 		<Footer />
 	</body>

@@ -36,7 +36,18 @@ const sortedTags = Array.from(tagCounts.entries())
 		/>
 		<style>
 			main {
-				width: 960px;
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2.5rem 1.5rem;
+				box-sizing: border-box;
+			}
+			
+			.content-wrapper {
+				max-width: 100%;
+				margin: 0 auto;
+				padding: 0;
+				box-sizing: border-box;
 			}
 			
 			.hero-section {
@@ -133,33 +144,35 @@ const sortedTags = Array.from(tagCounts.entries())
 	<body>
 		<Header />
 		<main>
-			<div class="hero-section">
-				<h1>All Tags</h1>
-				<p>
-					Browse posts by topic. Click on any tag to see all related posts.
-				</p>
-			</div>
-			
-			<div class="stats">
-				<div class="stat-item">
-					<span class="stat-number">{sortedTags.length}</span>
-					<span class="stat-label">Total Tags</span>
+			<div class="content-wrapper">
+				<div class="hero-section">
+					<h1>All Tags</h1>
+					<p>
+						Browse posts by topic. Click on any tag to see all related posts.
+					</p>
 				</div>
-				<div class="stat-item">
-					<span class="stat-number">{allPosts.length}</span>
-					<span class="stat-label">Total Posts</span>
+				
+				<div class="stats">
+					<div class="stat-item">
+						<span class="stat-number">{sortedTags.length}</span>
+						<span class="stat-label">Total Tags</span>
+					</div>
+					<div class="stat-item">
+						<span class="stat-number">{allPosts.length}</span>
+						<span class="stat-label">Total Posts</span>
+					</div>
 				</div>
-			</div>
-			
-			<div class="tags-container">
-				{
-					sortedTags.map(([tag, count]) => (
-						<a href={`/blog/tag/${encodeURIComponent(tag)}/`} class="tag-card">
-							<div class="tag-name">{tag}</div>
-							<div class="tag-count">{count} {count === 1 ? 'post' : 'posts'}</div>
-						</a>
-					))
-				}
+				
+				<div class="tags-container">
+					{
+						sortedTags.map(([tag, count]) => (
+							<a href={`/blog/tag/${encodeURIComponent(tag)}/`} class="tag-card">
+								<div class="tag-name">{tag}</div>
+								<div class="tag-count">{count} {count === 1 ? 'post' : 'posts'}</div>
+							</a>
+						))
+					}
+				</div>
 			</div>
 		</main>
 		<Footer />

@@ -55,7 +55,18 @@ function parseBlogDate(dateStr: string | Date) {
 		/>
 		<style>
 			main {
-				width: 960px;
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2.5rem 1.5rem;
+				box-sizing: border-box;
+			}
+			
+			.content-wrapper {
+				max-width: 100%;
+				margin: 0 auto;
+				padding: 0;
+				box-sizing: border-box;
 			}
 			
 			.hero-section {
@@ -154,46 +165,48 @@ function parseBlogDate(dateStr: string | Date) {
 	<body>
 		<Header />
 		<main>
-			<div class="hero-section">
-				<h1>{seriesName || decodedSeries}</h1>
-				<p>
-					{seriesPosts.length} {seriesPosts.length === 1 ? 'post' : 'posts'} in this series
-				</p>
-			</div>
-			
-			{seriesPosts.length > 0 ? (
-				<ol class="series-posts">
-					{
-						seriesPosts.map((post) => {
-							const link = `/blog/${post.id.replace(/\.mdx?$/, '')}/`;
-							const part = post.data.seriesPart || 0;
-							return (
-								<li class="series-post">
-									<a href={link}>
-										<h2 class="post-title">
-											{part > 0 && `Part ${part}: `}{post.data.title}
-										</h2>
-										<p class="post-description">{post.data.description}</p>
-										<div class="post-meta">
-											<time>
-												<FormattedDate date={parseBlogDate(post.data.pubDate)} />
-											</time>
-											{post.data.type && (
-												<span>• {post.data.type}</span>
-											)}
-										</div>
-									</a>
-								</li>
-							);
-						})
-					}
-				</ol>
-			) : (
-				<div class="empty-state">
-					<p>No posts found in this series.</p>
-					<p><a href="/blog">← Back to all posts</a></p>
+			<div class="content-wrapper">
+				<div class="hero-section">
+					<h1>{seriesName || decodedSeries}</h1>
+					<p>
+						{seriesPosts.length} {seriesPosts.length === 1 ? 'post' : 'posts'} in this series
+					</p>
 				</div>
-			)}
+				
+				{seriesPosts.length > 0 ? (
+					<ol class="series-posts">
+						{
+							seriesPosts.map((post) => {
+								const link = `/blog/${post.id.replace(/\.mdx?$/, '')}/`;
+								const part = post.data.seriesPart || 0;
+								return (
+									<li class="series-post">
+										<a href={link}>
+											<h2 class="post-title">
+												{part > 0 && `Part ${part}: `}{post.data.title}
+											</h2>
+											<p class="post-description">{post.data.description}</p>
+											<div class="post-meta">
+												<time>
+													<FormattedDate date={parseBlogDate(post.data.pubDate)} />
+												</time>
+												{post.data.type && (
+													<span>• {post.data.type}</span>
+												)}
+											</div>
+										</a>
+									</li>
+								);
+							})
+						}
+					</ol>
+				) : (
+					<div class="empty-state">
+						<p>No posts found in this series.</p>
+						<p><a href="/blog">← Back to all posts</a></p>
+					</div>
+				)}
+			</div>
 		</main>
 		<Footer />
 	</body>
