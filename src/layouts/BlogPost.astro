@@ -30,7 +30,7 @@ function parseBlogDate(dateStr: string | Date) {
 	return new Date();
 }
 
-const { title, description, pubDate, updatedDate, heroImage, tags = [], author, readingTime, series, seriesPart } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags = [], author, readingTime, series, seriesPart, category } = Astro.props;
 const parsedPubDate = parseBlogDate(pubDate);
 const parsedUpdatedDate = updatedDate ? parseBlogDate(updatedDate) : undefined;
 
